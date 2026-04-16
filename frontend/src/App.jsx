@@ -30,6 +30,9 @@ const DEFAULT_IMAGES = {
 // WhatsApp number for contact
 const WHATSAPP_NUMBER = "919738634402";
 
+// API Base URL for health check
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://blr-estate-api.onrender.com/api';
+
 const A1BuildersRealEstate = () => {
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
@@ -54,12 +57,12 @@ const A1BuildersRealEstate = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fullscreenImage, setFullscreenImage] = useState(null);
 
-  // Check backend status
+  // Check backend status - FIXED: Use the Render backend URL
   useEffect(() => {
     const checkBackend = async () => {
       try {
         console.log('🔍 Checking backend connection...');
-        const response = await fetch('http://localhost:5001/api/health').catch(() => null);
+        const response = await fetch(`${API_BASE_URL}/health`).catch(() => null);
         
         if (response && response.ok) {
           setBackendStatus('connected');
@@ -1312,7 +1315,7 @@ const A1BuildersRealEstate = () => {
     );
   };
 
-  // About Page - COMPLETELY REBUILT WITH FULL CONTENT
+  // About Page
   const AboutPage = () => {
     const stats = [
       { icon: Home, value: properties.length || 0, label: 'Premium Properties', suffix: '+' },
