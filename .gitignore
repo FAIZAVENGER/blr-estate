@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment files - NEVER commit these
+.env
+.env.local
+.env.production
+backend/.env
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+
+# Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coverage directory
+coverage/
+
+# Vercel
+.vercel/
