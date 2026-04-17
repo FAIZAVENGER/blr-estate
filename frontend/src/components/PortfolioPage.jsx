@@ -23,8 +23,9 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [totalSlides, setTotalSlides] = useState(7);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [autoplay, setAutoplay] = useState(true);
+  const [autoplay, setAutoplay] = useState(false);
   const autoplayRef = useRef(null);
+  const scrollTimeoutRef = useRef(null);
   
   // Refs for GSAP animations
   const mainContainerRef = useRef(null);
@@ -42,6 +43,7 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const progressBarRef = useRef(null);
   const slideNumberRef = useRef(null);
   const backgroundElementsRef = useRef([]);
+  const isScrollingRef = useRef(false);
   
   const [formData, setFormData] = useState({
     name: 'Imran Khan',
@@ -95,42 +97,43 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
     createBackgroundElements();
     initSlideShow();
     
-    // Start autoplay
-    if (autoplay) {
-      startAutoplay();
-    }
+    // Add wheel event listener for scroll navigation
+    window.addEventListener('wheel', handleWheelScroll, { passive: false });
     
     return () => {
+      window.removeEventListener('wheel', handleWheelScroll);
       if (autoplayRef.current) {
         clearInterval(autoplayRef.current);
+      }
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
     };
   }, []);
 
-  const startAutoplay = () => {
-    autoplayRef.current = setInterval(() => {
-      if (!isAnimating && autoplay && currentSlide < totalSlides - 1) {
+  const handleWheelScroll = (e) => {
+    e.preventDefault();
+    
+    if (isAnimating || isScrollingRef.current) return;
+    
+    isScrollingRef.current = true;
+    
+    if (e.deltaY > 0) {
+      // Scroll down - next slide
+      if (currentSlide < totalSlides - 1) {
         nextSlide();
-      } else if (!isAnimating && autoplay && currentSlide === totalSlides - 1) {
-        goToSlide(0);
       }
-    }, 5000);
-  };
-
-  const stopAutoplay = () => {
-    if (autoplayRef.current) {
-      clearInterval(autoplayRef.current);
-      autoplayRef.current = null;
+    } else if (e.deltaY < 0) {
+      // Scroll up - previous slide
+      if (currentSlide > 0) {
+        prevSlide();
+      }
     }
-  };
-
-  const toggleAutoplay = () => {
-    setAutoplay(!autoplay);
-    if (!autoplay) {
-      startAutoplay();
-    } else {
-      stopAutoplay();
-    }
+    
+    // Reset scrolling flag after animation
+    setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 800);
   };
 
   const createBackgroundElements = () => {
@@ -325,35 +328,30 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
     if (isAnimating || currentSlide >= totalSlides - 1) return;
     
     setIsAnimating(true);
-    stopAutoplay();
     
     await animateSlideOut(currentSlide, 'next');
     setCurrentSlide(currentSlide + 1);
     await animateSlideIn(currentSlide + 1, 'next');
     
     setIsAnimating(false);
-    if (autoplay) startAutoplay();
   };
 
   const prevSlide = async () => {
     if (isAnimating || currentSlide <= 0) return;
     
     setIsAnimating(true);
-    stopAutoplay();
     
     await animateSlideOut(currentSlide, 'prev');
     setCurrentSlide(currentSlide - 1);
     await animateSlideIn(currentSlide - 1, 'prev');
     
     setIsAnimating(false);
-    if (autoplay) startAutoplay();
   };
 
   const goToSlide = async (index) => {
     if (isAnimating || index === currentSlide || index < 0 || index >= totalSlides) return;
     
     setIsAnimating(true);
-    stopAutoplay();
     
     const direction = index > currentSlide ? 'next' : 'prev';
     await animateSlideOut(currentSlide, direction);
@@ -361,7 +359,6 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
     await animateSlideIn(index, direction);
     
     setIsAnimating(false);
-    if (autoplay) startAutoplay();
   };
 
   const loadPortfolioInBackground = async () => {
@@ -763,13 +760,13 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         01/07
       </div>
 
-      {/* Autoplay Toggle */}
-      <button
-        onClick={toggleAutoplay}
-        className="fixed bottom-6 left-24 z-50 bg-black/50 backdrop-blur-md p-2 rounded-full text-white hover:bg-black/70 transition-all duration-300"
-      >
-        {autoplay ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-      </button>
+      {/* Scroll Hint */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 text-center animate-bounce">
+        <div className="bg-black/50 backdrop-blur-md px-4 py-2 rounded-full text-white text-xs flex items-center gap-2">
+          <span>Scroll</span>
+          <ChevronRight className="w-3 h-3 rotate-90" />
+        </div>
+      </div>
 
       {/* Success Modal */}
       {showSuccessModal && (
@@ -800,26 +797,6 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           </button>
         ))}
       </div>
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className={`fixed left-8 top-1/2 transform -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110 ${
-          currentSlide === 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
-        }`}
-        disabled={currentSlide === 0}
-      >
-        <ChevronLeft className="w-6 h-6 text-white" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className={`fixed right-8 top-1/2 transform -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-all duration-300 hover:scale-110 ${
-          currentSlide === totalSlides - 1 ? 'opacity-30 cursor-not-allowed' : 'opacity-100'
-        }`}
-        disabled={currentSlide === totalSlides - 1}
-      >
-        <ChevronRight className="w-6 h-6 text-white" />
-      </button>
 
       <header className="bg-white/10 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -903,6 +880,13 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           position: absolute;
           pointer-events: none;
           border-radius: 50%;
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(10px); }
+        }
+        .animate-bounce {
+          animation: bounce 2s ease-in-out infinite;
         }
       `}</style>
     </div>
