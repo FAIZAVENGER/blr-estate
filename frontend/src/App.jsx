@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Search, MapPin, Building2, Phone, Mail, Bed, Bath, Square, Heart, 
   Filter, Menu, X, LogOut, Home, Award, Shield, Upload, Wifi, Car, 
@@ -17,8 +17,12 @@ import { propertyAPI, authAPI } from './services/api';
 import BrochureGenerator from './components/BrochureGenerator';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import PortfolioPage from './components/PortfolioPage';
-import anime from 'animejs';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './App.css';
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
 // Professional background image
 const BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80";
@@ -1195,15 +1199,19 @@ const A1BuildersRealEstate = () => {
       phone: ''
     });
     const [formError, setFormError] = useState('');
+    const loginCardRef = useRef(null);
 
     useEffect(() => {
-      anime({
-        targets: '.login-card',
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 800,
-        easing: 'easeOutCubic'
-      });
+      gsap.fromTo(loginCardRef.current,
+        { opacity: 0, y: 50, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "back.out(1.2)"
+        }
+      );
     }, []);
 
     const handleSubmit = async (e) => {
@@ -1258,7 +1266,7 @@ const A1BuildersRealEstate = () => {
           ))}
         </div>
 
-        <div className="relative z-10 w-full max-w-5xl login-card">
+        <div ref={loginCardRef} className="relative z-10 w-full max-w-5xl">
           <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/20">
             <div className="md:flex">
               <div className="md:w-1/2 p-8 md:p-12 bg-white">
@@ -1429,7 +1437,7 @@ const A1BuildersRealEstate = () => {
     );
   };
 
-  // About Page with anime.js animations
+  // About Page with GSAP animations
   const AboutPage = () => {
     const stats = [
       { icon: Home, value: properties.length || 0, label: 'Premium Properties', suffix: '+' },
@@ -1454,62 +1462,171 @@ const A1BuildersRealEstate = () => {
       { year: '2024', title: 'The Future', desc: 'Continuing to innovate and provide the best real estate experience.', icon: Sparkles }
     ];
 
+    // Refs for GSAP animations
+    const heroRef = useRef(null);
+    const statsGridRef = useRef(null);
+    const missionRef = useRef(null);
+    const valuesRef = useRef(null);
+    const journeyRef = useRef(null);
+    const teamRef = useRef(null);
+    const ctaRef = useRef(null);
+    const statCardsRef = useRef([]);
+    const valueCardsRef = useRef([]);
+    const teamCardsRef = useRef([]);
+    const milestoneItemsRef = useRef([]);
+
     useEffect(() => {
-      // Stagger animations for stats
-      anime({
-        targets: '.stat-card',
-        translateY: [30, 0],
-        opacity: [0, 1],
-        delay: anime.stagger(100),
-        duration: 800,
-        easing: 'easeOutCubic'
-      });
-      
-      // Float animation for icons
-      anime({
-        targets: '.float-icon',
-        translateY: [-5, 5],
-        direction: 'alternate',
-        loop: true,
-        duration: 2000,
-        easing: 'easeInOutSine'
-      });
-      
-      // Timeline animation for milestones
-      const timeline = anime.timeline({
-        easing: 'easeOutCubic',
-        duration: 800
-      });
-      
-      timeline.add({
-        targets: '.milestone-item',
-        translateX: [50, 0],
-        opacity: [0, 1],
-        delay: anime.stagger(150)
-      });
-      
-      // Scroll reveal animation
-      const revealElements = document.querySelectorAll('.reveal-on-scroll');
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            anime({
-              targets: entry.target,
-              translateY: [30, 0],
-              opacity: [0, 1],
-              duration: 800,
-              easing: 'easeOutCubic'
-            });
-            revealObserver.unobserve(entry.target);
+      // Hero section animation
+      gsap.fromTo(heroRef.current,
+        { opacity: 0, scale: 0.9, y: 30 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 1,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
           }
+        }
+      );
+
+      // Stats cards animation
+      gsap.fromTo(statCardsRef.current,
+        { opacity: 0, y: 50, scale: 0.8 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "elastic.out(1, 0.5)",
+          scrollTrigger: {
+            trigger: statsGridRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Mission and Vision cards
+      gsap.fromTo(missionRef.current,
+        { opacity: 0, x: -80 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: missionRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Values cards animation
+      gsap.fromTo(valueCardsRef.current,
+        { opacity: 0, scale: 0.6, rotationY: 90 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotationY: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "back.out(1)",
+          scrollTrigger: {
+            trigger: valuesRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Journey timeline animation
+      gsap.fromTo(milestoneItemsRef.current,
+        { opacity: 0, x: (i) => i % 2 === 0 ? -60 : 60 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          stagger: 0.2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: journeyRef.current,
+            start: "top 70%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Team cards animation
+      gsap.fromTo(teamCardsRef.current,
+        { opacity: 0, scale: 0.7, rotation: 10 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "back.out(0.8)",
+          scrollTrigger: {
+            trigger: teamRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // CTA section animation
+      gsap.fromTo(ctaRef.current,
+        { opacity: 0, y: 50, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.5)",
+          scrollTrigger: {
+            trigger: ctaRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Continuous floating animation for icons
+      gsap.to(".float-icon", {
+        y: -10,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+        stagger: 0.2
+      });
+
+      // Hover animation for stat cards
+      statCardsRef.current.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          gsap.to(card, {
+            y: -10,
+            scale: 1.05,
+            duration: 0.3,
+            ease: "power2.out"
+          });
         });
-      }, { threshold: 0.2 });
-      
-      revealElements.forEach(el => revealObserver.observe(el));
-      
-      return () => {
-        revealElements.forEach(el => revealObserver.unobserve(el));
-      };
+        card.addEventListener("mouseleave", () => {
+          gsap.to(card, {
+            y: 0,
+            scale: 1,
+            duration: 0.3,
+            ease: "power2.in"
+          });
+        });
+      });
+
     }, []);
 
     const teamMembers = [
@@ -1540,7 +1657,8 @@ const A1BuildersRealEstate = () => {
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-20 animate-fadeInUp">
+          {/* Hero Section */}
+          <div ref={heroRef} className="text-center mb-20">
             <div className="inline-block p-4 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
               <Building2 className="w-12 h-12 text-[#d4af37]" />
             </div>
@@ -1553,9 +1671,14 @@ const A1BuildersRealEstate = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+          {/* Stats Section */}
+          <div ref={statsGridRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
             {stats.map((stat, index) => (
-              <div key={index} className="stat-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+              <div 
+                key={index} 
+                ref={el => statCardsRef.current[index] = el}
+                className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 cursor-pointer"
+              >
                 <div className="float-icon bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <stat.icon className="w-8 h-8 text-[#d4af37]" />
                 </div>
@@ -1567,11 +1690,12 @@ const A1BuildersRealEstate = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-            <div className="reveal-on-scroll bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
+          {/* Mission and Vision */}
+          <div ref={missionRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300">
                   <Target className="w-7 h-7 text-[#d4af37]" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Our Mission</h3>
@@ -1581,10 +1705,10 @@ const A1BuildersRealEstate = () => {
                 </p>
               </div>
             </div>
-            <div className="reveal-on-scroll bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
+            <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:-rotate-12 transition-transform duration-300">
                   <Globe className="w-7 h-7 text-[#d4af37]" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Our Vision</h3>
@@ -1596,15 +1720,20 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          <div className="mb-20">
+          {/* Core Values */}
+          <div ref={valuesRef} className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Core Values</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">The principles that guide everything we do</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((value, index) => (
-                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
-                  <div className={`w-14 h-14 bg-gradient-to-r ${value.color} rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                <div 
+                  key={index} 
+                  ref={el => valueCardsRef.current[index] = el}
+                  className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                >
+                  <div className={`w-14 h-14 bg-gradient-to-r ${value.color} rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
                     <value.icon className="w-7 h-7 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-[#1a1a2e] mb-2">{value.title}</h3>
@@ -1614,7 +1743,8 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          <div className="mb-20">
+          {/* Journey Timeline */}
+          <div ref={journeyRef} className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Journey</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">15+ years of excellence in real estate</p>
@@ -1623,9 +1753,13 @@ const A1BuildersRealEstate = () => {
               <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-[#1a1a2e] to-[#d4af37] hidden md:block"></div>
               <div className="space-y-8">
                 {milestones.map((milestone, index) => (
-                  <div key={index} className={`milestone-item flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                  <div 
+                    key={index} 
+                    ref={el => milestoneItemsRef.current[index] = el}
+                    className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
+                  >
                     <div className="md:w-1/2 p-4">
-                      <div className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform hover:-translate-y-1 transition-all duration-300`}>
+                      <div className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform hover:-translate-y-1 transition-all duration-300 hover:shadow-xl`}>
                         <div className="flex items-center gap-3 mb-3">
                           <div className="w-12 h-12 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-xl flex items-center justify-center shadow-md">
                             <milestone.icon className="w-6 h-6 text-[#d4af37]" />
@@ -1646,14 +1780,19 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          <div className="mb-20">
+          {/* Team Section */}
+          <div ref={teamRef} className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Meet Our Leadership</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">The passionate team behind A1 Builders</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamMembers.map((member, index) => (
-                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div 
+                  key={index} 
+                  ref={el => teamCardsRef.current[index] = el}
+                  className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                >
                   <div className="relative">
                     <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200 hover:border-[#d4af37] transition-all duration-300" />
                   </div>
@@ -1672,6 +1811,7 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
+          {/* Testimonials */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">What Our Clients Say</h2>
@@ -1679,7 +1819,7 @@ const A1BuildersRealEstate = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300">
                   <Quote className="w-8 h-8 text-[#d4af37] mb-4 opacity-50" />
                   <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.content}"</p>
                   <div className="flex items-center gap-3">
@@ -1699,7 +1839,8 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          <div className="reveal-on-scroll bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+          {/* CTA Section */}
+          <div ref={ctaRef} className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -ml-32 -mb-32"></div>
             <div className="relative z-10">
@@ -1732,32 +1873,23 @@ const A1BuildersRealEstate = () => {
 
   // Home Page
   const HomePage = () => {
+    const heroTitleRef = useRef(null);
+    const heroSubtitleRef = useRef(null);
+    const heroButtonRef = useRef(null);
+
     useEffect(() => {
-      anime({
-        targets: '.hero-title',
-        opacity: [0, 1],
-        translateY: [30, 0],
-        duration: 1000,
-        easing: 'easeOutCubic'
-      });
-      
-      anime({
-        targets: '.hero-subtitle',
-        opacity: [0, 1],
-        translateY: [20, 0],
-        delay: 300,
-        duration: 800,
-        easing: 'easeOutCubic'
-      });
-      
-      anime({
-        targets: '.hero-button',
-        opacity: [0, 1],
-        scale: [0.9, 1],
-        delay: 600,
-        duration: 600,
-        easing: 'easeOutElastic(1, .5)'
-      });
+      gsap.fromTo(heroTitleRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+      );
+      gsap.fromTo(heroSubtitleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: "power3.out" }
+      );
+      gsap.fromTo(heroButtonRef.current,
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.6, delay: 0.6, ease: "back.out(1.2)" }
+      );
     }, []);
 
     return (
@@ -1913,15 +2045,15 @@ const A1BuildersRealEstate = () => {
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
             <div className="max-w-3xl">
-              <h2 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                 Find Your <span className="text-[#d4af37]">Dream Home</span><br />
                 in Bangalore
               </h2>
-              <p className="hero-subtitle text-lg md:text-xl text-gray-200 mb-8">
+              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-8">
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
-              <div className="hero-button bg-white rounded-xl shadow-xl">
+              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl">
                 <div className="flex flex-col md:flex-row">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -2065,7 +2197,6 @@ const A1BuildersRealEstate = () => {
                   <div 
                     key={property._id} 
                     className="property-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group"
-                    style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="relative overflow-hidden bg-gray-100 h-56">
                       <img 
@@ -2306,46 +2437,6 @@ const A1BuildersRealEstate = () => {
       </div>
     );
   };
-
-  // Add CSS animations
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes float {
-        0%, 100% { transform: translateY(0px) translateX(0px); }
-        25% { transform: translateY(-20px) translateX(10px); }
-        75% { transform: translateY(20px) translateX(-10px); }
-      }
-      
-      @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-      }
-      
-      @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-      }
-      
-      .animate-shake {
-        animation: shake 0.3s ease-in-out;
-      }
-      
-      .animate-bounce {
-        animation: bounce 2s ease-in-out infinite;
-      }
-      
-      .line-clamp-1 {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
 
   // Main Render
   return (
