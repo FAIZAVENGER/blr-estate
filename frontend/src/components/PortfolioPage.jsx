@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   ArrowLeft, Camera, Upload, Trash2, User, 
   Mail, Phone, MapPin, Briefcase, Award, 
@@ -6,6 +6,11 @@ import {
   Instagram, Facebook, Twitter, Linkedin, Sparkles, Crown, Star
 } from 'lucide-react';
 import { portfolioAPI } from '../services/api';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
 
 const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const [portfolio, setPortfolio] = useState(null);
@@ -14,6 +19,17 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const [uploading, setUploading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  
+  // Refs for GSAP animations
+  const heroRef = useRef(null);
+  const statsRef = useRef(null);
+  const bioRef = useRef(null);
+  const galleryRef = useRef(null);
+  const achievementsRef = useRef(null);
+  const socialRef = useRef(null);
+  const statItemsRef = useRef([]);
+  const galleryItemsRef = useRef([]);
+  
   const [formData, setFormData] = useState({
     name: 'Imran Khan',
     title: 'Founder & CEO | Real Estate Expert',
@@ -37,6 +53,134 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   useEffect(() => {
     loadPortfolio();
   }, []);
+
+  // GSAP Animations
+  useEffect(() => {
+    if (!loading && portfolio) {
+      // Hero section animation
+      gsap.fromTo(heroRef.current,
+        { opacity: 0, y: 50, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Stats animation with stagger
+      gsap.fromTo(statItemsRef.current,
+        { opacity: 0, scale: 0.8, rotation: -5 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotation: 0,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: "elastic.out(1, 0.5)",
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Bio section animation
+      gsap.fromTo(bioRef.current,
+        { opacity: 0, x: -50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: bioRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Gallery items animation with stagger
+      gsap.fromTo(galleryItemsRef.current,
+        { opacity: 0, y: 50, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.7,
+          stagger: 0.1,
+          ease: "back.out(0.8)",
+          scrollTrigger: {
+            trigger: galleryRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Achievements section animation
+      gsap.fromTo(achievementsRef.current,
+        { opacity: 0, scale: 0.9, rotationY: -15 },
+        {
+          opacity: 1,
+          scale: 1,
+          rotationY: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: achievementsRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Social links animation
+      gsap.fromTo(socialRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "bounce.out",
+          scrollTrigger: {
+            trigger: socialRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Continuous floating animation for profile image
+      gsap.to(".profile-image", {
+        y: -8,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+
+      // Pulse animation for stat cards
+      statItemsRef.current.forEach((item, index) => {
+        gsap.to(item, {
+          boxShadow: "0 20px 30px -10px rgba(0,0,0,0.15)",
+          duration: 2,
+          repeat: -1,
+          yoyo: true,
+          delay: index * 0.2,
+          ease: "power1.inOut"
+        });
+      });
+    }
+  }, [loading, portfolio]);
 
   const loadPortfolio = async () => {
     try {
@@ -202,12 +346,12 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 transform hover:shadow-2xl transition-all duration-500 animate-fadeInUp">
+        <div ref={heroRef} className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8 transform hover:shadow-2xl transition-all duration-500">
           <div className="relative h-48 bg-gradient-to-r from-[#1a1a2e] via-[#2d2d4e] to-[#1a1a2e]">
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="absolute -bottom-16 left-8">
               <div className="relative group">
-                <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] bg-white overflow-hidden shadow-xl">
+                <div className="profile-image w-32 h-32 rounded-full border-4 border-[#d4af37] bg-white overflow-hidden shadow-xl">
                   {photos[0] ? (
                     <img src={photos[0]} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -225,13 +369,13 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
               </div>
             </div>
             <div className="absolute top-4 right-4">
-              <Crown className="w-8 h-8 text-[#d4af37] opacity-50" />
+              <Crown className="w-8 h-8 text-[#d4af37] opacity-50 animate-pulse" />
             </div>
           </div>
           
           <div className="pt-20 pb-8 px-8">
             <div className="flex justify-between items-start flex-wrap gap-4">
-              <div className="animate-fadeInLeft">
+              <div>
                 {isEditing ? (
                   <input
                     type="text"
@@ -251,28 +395,30 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
                   />
                 ) : (
                   <p className="text-gray-600 mt-1 flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-[#d4af37]" />
+                    <Sparkles className="w-4 h-4 text-[#d4af37] animate-pulse" />
                     {formData.title}
                   </p>
                 )}
               </div>
-              <div className="flex gap-4 animate-fadeInRight">
-                <div className="text-center bg-gradient-to-br from-gray-50 to-white px-4 py-2 rounded-xl shadow-sm">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">{formData.experience}</div>
-                  <div className="text-xs text-gray-500">Experience</div>
-                </div>
-                <div className="text-center bg-gradient-to-br from-gray-50 to-white px-4 py-2 rounded-xl shadow-sm">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">{formData.propertiesSold}</div>
-                  <div className="text-xs text-gray-500">Properties Sold</div>
-                </div>
-                <div className="text-center bg-gradient-to-br from-gray-50 to-white px-4 py-2 rounded-xl shadow-sm">
-                  <div className="text-2xl font-bold text-[#d4af37]">⭐ {formData.rating}</div>
-                  <div className="text-xs text-gray-500">Rating</div>
-                </div>
+              <div ref={statsRef} className="flex gap-4">
+                {['experience', 'propertiesSold', 'rating'].map((key, idx) => (
+                  <div 
+                    key={idx}
+                    ref={el => statItemsRef.current[idx] = el}
+                    className="text-center bg-gradient-to-br from-gray-50 to-white px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <div className="text-2xl font-bold text-[#1a1a2e]">
+                      {key === 'rating' ? `⭐ ${formData[key]}` : formData[key]}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {key === 'experience' ? 'Experience' : key === 'propertiesSold' ? 'Properties Sold' : 'Rating'}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-500 animate-fadeInUp">
+            <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-500">
               <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg">
                 <Mail className="w-4 h-4 text-[#d4af37]" />
                 {isEditing ? (
@@ -317,7 +463,7 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         </div>
 
         {/* Bio Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 transform hover:shadow-xl transition-all duration-300 animate-fadeInLeft">
+        <div ref={bioRef} className="bg-white rounded-2xl shadow-lg p-8 mb-8 transform hover:shadow-xl transition-all duration-300">
           <h2 className="text-xl font-bold text-[#1a1a2e] mb-4 flex items-center gap-2">
             <Briefcase className="w-5 h-5 text-[#d4af37]" />
             About Me
@@ -335,7 +481,7 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         </div>
 
         {/* Photo Gallery Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 animate-fadeInRight">
+        <div ref={galleryRef} className="bg-white rounded-2xl shadow-lg p-8 mb-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-[#1a1a2e] flex items-center gap-2">
               <Camera className="w-5 h-5 text-[#d4af37]" />
@@ -360,7 +506,11 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {photos.map((photo, index) => (
-              <div key={index} className="relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
+              <div 
+                key={index} 
+                ref={el => galleryItemsRef.current[index] = el}
+                className="relative group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300"
+              >
                 <img 
                   src={photo} 
                   alt={`Gallery ${index + 1}`}
@@ -398,27 +548,27 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         </div>
 
         {/* Achievements Section */}
-        <div className="bg-gradient-to-r from-[#1a1a2e] via-[#2d2d4e] to-[#1a1a2e] rounded-2xl p-8 text-white transform hover:-translate-y-1 transition-all duration-500 animate-scaleIn">
+        <div ref={achievementsRef} className="bg-gradient-to-r from-[#1a1a2e] via-[#2d2d4e] to-[#1a1a2e] rounded-2xl p-8 text-white transform hover:-translate-y-1 transition-all duration-500">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
             <Award className="w-5 h-5 text-[#d4af37]" />
             Achievements & Recognition
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all">
+            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all hover:scale-105 transform duration-300">
               <CheckCircle className="w-8 h-8 text-[#d4af37]" />
               <div>
                 <div className="font-bold">Top Agent Award</div>
                 <div className="text-sm text-gray-300">2023 - Bangalore Real Estate Summit</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all">
+            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all hover:scale-105 transform duration-300">
               <CheckCircle className="w-8 h-8 text-[#d4af37]" />
               <div>
                 <div className="font-bold">Customer Satisfaction</div>
                 <div className="text-sm text-gray-300">98% Positive Reviews</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all">
+            <div className="flex items-center gap-3 p-4 bg-white/10 rounded-xl backdrop-blur-sm hover:bg-white/20 transition-all hover:scale-105 transform duration-300">
               <CheckCircle className="w-8 h-8 text-[#d4af37]" />
               <div>
                 <div className="font-bold">Highest Sales Volume</div>
@@ -429,17 +579,17 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         </div>
 
         {/* Social Links */}
-        <div className="mt-8 flex justify-center gap-4 animate-fadeInUp">
-          <a href={formData.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 transform hover:scale-110">
+        <div ref={socialRef} className="mt-8 flex justify-center gap-4">
+          <a href={formData.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 transform hover:scale-110 hover:rotate-12">
             <Instagram className="w-4 h-4" />
           </a>
-          <a href={formData.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110">
+          <a href={formData.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 hover:-rotate-12">
             <Facebook className="w-4 h-4" />
           </a>
-          <a href={formData.socialLinks?.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300 transform hover:scale-110">
+          <a href={formData.socialLinks?.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300 transform hover:scale-110 hover:rotate-6">
             <Twitter className="w-4 h-4" />
           </a>
-          <a href={formData.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all duration-300 transform hover:scale-110">
+          <a href={formData.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all duration-300 transform hover:scale-110 hover:-rotate-6">
             <Linkedin className="w-4 h-4" />
           </a>
         </div>
