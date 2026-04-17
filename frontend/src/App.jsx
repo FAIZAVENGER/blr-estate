@@ -113,20 +113,50 @@ const A1BuildersRealEstate = () => {
     }
   }, []);
 
-  // Fetch properties from backend
-  const fetchProperties = useCallback(async () => {
+  // Fetch properties from backend with caching
+  const fetchProperties = useCallback(async (forceRefresh = false) => {
     try {
       setLoading(true);
       setError(null);
       
-      console.log('📦 Fetching properties...');
+      // Check cache first
+      const cachedData = localStorage.getItem('cachedProperties');
+      const cacheTimestamp = localStorage.getItem('cachedPropertiesTimestamp');
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
       
-      const response = await propertyAPI.getAll();
+      if (!forceRefresh && cachedData && cacheTimestamp) {
+        const now = Date.now();
+        if (now - parseInt(cacheTimestamp) < CACHE_DURATION) {
+          const cached = JSON.parse(cachedData);
+          if (cached && cached.length > 0) {
+            console.log('📦 Using cached properties:', cached.length);
+            setProperties(cached);
+            setFilteredProperties(cached);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+      
+      console.log('📦 Fetching properties from API...');
+      
+      // Use Promise.race for timeout
+      const fetchPromise = propertyAPI.getAll();
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+      
+      const response = await Promise.race([fetchPromise, timeoutPromise]);
       
       if (response.data && Array.isArray(response.data)) {
         console.log(`✅ Found ${response.data.length} properties`);
         setProperties(response.data);
         setFilteredProperties(response.data);
+        
+        // Cache the data
+        localStorage.setItem('cachedProperties', JSON.stringify(response.data));
+        localStorage.setItem('cachedPropertiesTimestamp', Date.now().toString());
+        
         if (backendStatus === 'disconnected' && connectionChecked) {
           setBackendStatus('connected');
         }
@@ -137,10 +167,24 @@ const A1BuildersRealEstate = () => {
     } catch (error) {
       console.error('❌ Error fetching properties:', error);
       
+      // Try to use cached data even if expired
+      const cachedData = localStorage.getItem('cachedProperties');
+      if (cachedData) {
+        const cached = JSON.parse(cachedData);
+        if (cached && cached.length > 0) {
+          console.log('⚠️ Using expired cache due to error');
+          setProperties(cached);
+          setFilteredProperties(cached);
+          setError(null);
+          setLoading(false);
+          return;
+        }
+      }
+      
       let errorMsg = 'Failed to load properties. ';
       
-      if (error.message === 'Network Error') {
-        errorMsg += 'Backend server may not be running.';
+      if (error.message === 'Network Error' || error.message === 'Request timeout') {
+        errorMsg += 'Server is waking up. Please wait a moment and refresh.';
         setBackendStatus('disconnected');
       } else if (error.response) {
         errorMsg += `Server error: ${error.response.status}`;
@@ -223,6 +267,9 @@ const A1BuildersRealEstate = () => {
         setProperties(response.data);
         setFilteredProperties(response.data);
         setBackendStatus('connected');
+        // Update cache
+        localStorage.setItem('cachedProperties', JSON.stringify(response.data));
+        localStorage.setItem('cachedPropertiesTimestamp', Date.now().toString());
       } else {
         setError('No properties found.');
       }
@@ -536,50 +583,51 @@ const A1BuildersRealEstate = () => {
 
         <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <button
                 onClick={() => setCurrentPage('home')}
                 className="flex items-center gap-2 text-gray-600 hover:text-[#1a1a2e] transition-all group"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <span className="font-medium">Back to Properties</span>
+                <span className="font-medium hidden sm:inline">Back to Properties</span>
+                <span className="font-medium sm:hidden">Back</span>
               </button>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-2">
                 {userRole === 'owner' && (
                   <>
                     <button 
                       onClick={() => setIsEditMode(true)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white hover:shadow-lg transition-all"
+                      className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white hover:shadow-lg transition-all text-sm sm:text-base"
                     >
-                      <Edit2 className="w-4 h-4" />
-                      Edit
+                      <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">Edit</span>
                     </button>
                     <button 
                       onClick={() => handleDeleteProperty(property._id, property.title)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all"
+                      className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all text-sm sm:text-base"
                     >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
+                      <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">Delete</span>
                     </button>
                   </>
                 )}
                 <button 
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all text-sm sm:text-base"
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
                     setSuccessMessage('Link copied to clipboard!');
                     setTimeout(() => setSuccessMessage(null), 3000);
                   }}
                 >
-                  <Share2 className="w-4 h-4" />
-                  Share
+                  <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Share</span>
                 </button>
                 <button 
                   onClick={() => toggleFavorite(property._id)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all text-sm sm:text-base"
                 >
-                  <Heart className={`w-4 h-4 transition-all ${favorites.includes(property._id) ? 'fill-red-500 text-red-500' : ''}`} />
-                  Save
+                  <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all ${favorites.includes(property._id) ? 'fill-red-500 text-red-500' : ''}`} />
+                  <span className="hidden sm:inline">Save</span>
                 </button>
                 {userRole === 'owner' && (
                   <button 
@@ -587,10 +635,10 @@ const A1BuildersRealEstate = () => {
                       setSelectedPropertyForBrochure(property);
                       setShowBrochureGenerator(true);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                    className="flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all text-sm sm:text-base"
                   >
-                    <FileText className="w-4 h-4" />
-                    Brochure
+                    <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Brochure</span>
                   </button>
                 )}
               </div>
