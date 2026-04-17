@@ -241,9 +241,17 @@ const A1BuildersRealEstate = () => {
     if (bedrooms !== 'all') {
       filtered = filtered.filter(p => p.bedrooms === parseInt(bedrooms));
     }
+    
+    // Apply search filter
+    if (searchTerm) {
+      filtered = filtered.filter(p => 
+        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
     setFilteredProperties(filtered);
-  }, [priceRange, propertyType, bedrooms, properties, activeTab]);
+  }, [priceRange, propertyType, bedrooms, properties, activeTab, searchTerm]);
 
   const toggleFavorite = (id) => {
     setFavorites(prev => 
@@ -305,6 +313,7 @@ const A1BuildersRealEstate = () => {
     setPriceRange('all');
     setPropertyType('all');
     setBedrooms('all');
+    setSearchTerm('');
   };
 
   const handleDeleteProperty = async (propertyId, propertyTitle) => {
@@ -2174,7 +2183,9 @@ const A1BuildersRealEstate = () => {
           )}
         </header>
 
-        <section className="relative h-[550px] overflow-hidden">
+        {/* Fullscreen Hero Section with Blur Background */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+          {/* Background Image with Blur */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ 
@@ -2183,31 +2194,42 @@ const A1BuildersRealEstate = () => {
               transform: 'scale(1.1)'
             }}
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/60" />
           
-          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
-            <div className="max-w-3xl">
-              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight opacity-0">
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight opacity-0">
                 Find Your <span className="text-[#d4af37]">Dream Home</span><br />
                 in Bangalore
               </h2>
-              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-8 opacity-0">
+              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-10 opacity-0">
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
-              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl opacity-0">
+              {/* Search Bar */}
+              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl opacity-0 mb-6">
                 <div className="flex flex-col md:flex-row">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      placeholder="Search by location or property name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full pl-12 pr-4 py-4 rounded-t-xl md:rounded-l-xl md:rounded-tr-none border-none focus:ring-2 focus:ring-[#d4af37] outline-none"
+                    />
+                  </div>
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="flex-1 bg-gray-100 text-gray-700 px-6 py-4 flex items-center justify-center gap-2 hover:bg-gray-200 transition-all rounded-t-xl md:rounded-l-xl md:rounded-tr-none"
+                    className="md:w-auto bg-gray-100 text-gray-700 px-6 py-4 flex items-center justify-center gap-2 hover:bg-gray-200 transition-all"
                   >
                     <Filter className="w-5 h-5" />
                     {showFilters ? 'Hide Filters' : 'Show Filters'}
                   </button>
-                  {(priceRange !== 'all' || propertyType !== 'all' || bedrooms !== 'all') && (
+                  {(priceRange !== 'all' || propertyType !== 'all' || bedrooms !== 'all' || searchTerm) && (
                     <button
                       onClick={clearFilters}
-                      className="bg-red-500 text-white px-6 py-4 flex items-center justify-center gap-2 hover:bg-red-600 transition-all rounded-b-xl md:rounded-r-xl"
+                      className="md:w-auto bg-red-500 text-white px-6 py-4 flex items-center justify-center gap-2 hover:bg-red-600 transition-all rounded-b-xl md:rounded-r-xl"
                     >
                       <X className="w-5 h-5" />
                       Clear Filters
@@ -2216,11 +2238,12 @@ const A1BuildersRealEstate = () => {
                 </div>
               </div>
 
+              {/* Filter Options */}
               {showFilters && (
-                <div className="mt-4 bg-white rounded-xl shadow-xl p-5 animate-scaleIn">
+                <div className="mt-4 bg-white rounded-xl shadow-xl p-6 animate-scaleIn">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Price Range</label>
                       <select 
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={priceRange}
@@ -2235,7 +2258,7 @@ const A1BuildersRealEstate = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
                       <select 
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={propertyType}
@@ -2251,7 +2274,7 @@ const A1BuildersRealEstate = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
                       <select 
                         className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={bedrooms}
@@ -2273,31 +2296,32 @@ const A1BuildersRealEstate = () => {
 
         {/* Stats Section - Fixed to load only once */}
         {!loading && (
-          <section ref={statsSectionRef} className="py-12 bg-gradient-to-r from-gray-50 to-white">
+          <section ref={statsSectionRef} className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div ref={el => statsCardsRef.current[0] = el} className="text-center opacity-0">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">{properties.length}+</div>
-                  <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
+                  <div className="text-3xl font-bold text-[#1a1a2e]">{properties.length}+</div>
+                  <div className="text-sm text-gray-500 mt-2">Premium Properties</div>
                 </div>
                 <div ref={el => statsCardsRef.current[1] = el} className="text-center opacity-0">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">50,000+</div>
-                  <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
+                  <div className="text-3xl font-bold text-[#1a1a2e]">50,000+</div>
+                  <div className="text-sm text-gray-500 mt-2">Happy Clients</div>
                 </div>
                 <div ref={el => statsCardsRef.current[2] = el} className="text-center opacity-0">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">15+</div>
-                  <div className="text-sm text-gray-500 mt-1">Years Experience</div>
+                  <div className="text-3xl font-bold text-[#1a1a2e]">15+</div>
+                  <div className="text-sm text-gray-500 mt-2">Years Experience</div>
                 </div>
                 <div ref={el => statsCardsRef.current[3] = el} className="text-center opacity-0">
-                  <div className="text-2xl font-bold text-[#1a1a2e]">100%</div>
-                  <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
+                  <div className="text-3xl font-bold text-[#1a1a2e]">100%</div>
+                  <div className="text-sm text-gray-500 mt-2">Verified Properties</div>
                 </div>
               </div>
             </div>
           </section>
         )}
 
-        <section ref={propertiesSectionRef} className="py-16">
+        {/* Properties Section */}
+        <section ref={propertiesSectionRef} className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
               <div>
@@ -2324,7 +2348,7 @@ const A1BuildersRealEstate = () => {
               </div>
             ) : filteredProperties.length === 0 ? (
               <div className="text-center py-20">
-                <div className="bg-gray-50 rounded-2xl p-8 inline-block">
+                <div className="bg-white rounded-2xl p-8 inline-block shadow-sm">
                   <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <p className="text-lg text-gray-700 mb-1">No properties found</p>
                   <p className="text-gray-500 text-sm mb-4">Try adjusting your filters</p>
@@ -2337,13 +2361,13 @@ const A1BuildersRealEstate = () => {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProperties.map((property, index) => (
                   <div 
                     key={property._id} 
-                    className="property-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group"
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group"
                   >
-                    <div className="relative overflow-hidden bg-gray-100 h-56">
+                    <div className="relative overflow-hidden bg-gray-100 h-64">
                       <img 
                         src={getPropertyImage(property)} 
                         alt={property.title}
@@ -2419,7 +2443,7 @@ const A1BuildersRealEstate = () => {
                       </div>
                     </div>
 
-                    <div className="p-4">
+                    <div className="p-5">
                       <h4 className="text-lg font-semibold text-[#1a1a2e] mb-1 line-clamp-1">
                         {property.title}
                       </h4>
