@@ -83,6 +83,7 @@ const A1BuildersRealEstate = () => {
   const propertiesSectionRef = useRef(null);
   const heroAnimationsRun = useRef(false);
   const statsAnimationsRun = useRef(false);
+  const logoRef = useRef(null);
 
   // Check backend status
   useEffect(() => {
@@ -2032,6 +2033,7 @@ const A1BuildersRealEstate = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div 
+                ref={logoRef}
                 className="flex items-center space-x-3 cursor-pointer group"
                 onClick={() => setCurrentPage('home')}
               >
@@ -2274,19 +2276,19 @@ const A1BuildersRealEstate = () => {
           <section ref={statsSectionRef} className="py-12 bg-gradient-to-r from-gray-50 to-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div ref={el => statsCardsRef.current[0] = el} className="text-center">
+                <div ref={el => statsCardsRef.current[0] = el} className="text-center opacity-0">
                   <div className="text-2xl font-bold text-[#1a1a2e]">{properties.length}+</div>
                   <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
                 </div>
-                <div ref={el => statsCardsRef.current[1] = el} className="text-center">
+                <div ref={el => statsCardsRef.current[1] = el} className="text-center opacity-0">
                   <div className="text-2xl font-bold text-[#1a1a2e]">50,000+</div>
                   <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
                 </div>
-                <div ref={el => statsCardsRef.current[2] = el} className="text-center">
+                <div ref={el => statsCardsRef.current[2] = el} className="text-center opacity-0">
                   <div className="text-2xl font-bold text-[#1a1a2e]">15+</div>
                   <div className="text-sm text-gray-500 mt-1">Years Experience</div>
                 </div>
-                <div ref={el => statsCardsRef.current[3] = el} className="text-center">
+                <div ref={el => statsCardsRef.current[3] = el} className="text-center opacity-0">
                   <div className="text-2xl font-bold text-[#1a1a2e]">100%</div>
                   <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
                 </div>
