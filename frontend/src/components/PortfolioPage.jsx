@@ -5,7 +5,8 @@ import {
   Edit2, Save, X, ImageIcon, CheckCircle, Building2,
   Instagram, Facebook, Twitter, Linkedin, Sparkles, Crown, Star,
   TrendingUp, Heart, Shield, Zap, Clock, Calendar, ThumbsUp,
-  Globe, Target, Coffee, Gift, HeartHandshake, Rocket, Users
+  Globe, Target, Coffee, Gift, HeartHandshake, Rocket, Users,
+  Home
 } from 'lucide-react';
 import { portfolioAPI } from '../services/api';
 import gsap from 'gsap';
@@ -75,7 +76,7 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
     { name: 'Neha Gupta', role: 'NRI Client', content: 'Professional and trustworthy. Handled everything remotely with perfection.', rating: 5, image: 'https://randomuser.me/api/portraits/women/4.jpg' }
   ];
 
-  const achievements = [
+  const achievementsList = [
     { title: 'Top Agent Award', year: '2023', desc: 'Bangalore Real Estate Summit', icon: Award, color: 'from-yellow-500 to-amber-500' },
     { title: 'Customer Satisfaction', year: '2024', desc: '98% Positive Reviews', icon: ThumbsUp, color: 'from-green-500 to-emerald-500' },
     { title: 'Highest Sales Volume', year: '2023', desc: '₹50Cr+ Property Sold', icon: TrendingUp, color: 'from-blue-500 to-cyan-500' },
@@ -242,22 +243,24 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
       );
 
       // Social links with wave effect
-      gsap.fromTo(socialRef.current.children,
-        { opacity: 0, scale: 0, rotate: 180 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotate: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: "back.out(1.5)",
-          scrollTrigger: {
-            trigger: socialRef.current,
-            start: "top 90%",
-            toggleActions: "play none none reverse"
+      if (socialRef.current && socialRef.current.children) {
+        gsap.fromTo(socialRef.current.children,
+          { opacity: 0, scale: 0, rotate: 180 },
+          {
+            opacity: 1,
+            scale: 1,
+            rotate: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "back.out(1.5)",
+            scrollTrigger: {
+              trigger: socialRef.current,
+              start: "top 90%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Continuous animations
       gsap.to(".profile-image", {
@@ -765,7 +768,7 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
               <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {achievements.map((achievement, index) => (
+              {achievementsList.map((achievement, index) => (
                 <div key={index} className={`bg-gradient-to-br ${achievement.color} bg-opacity-10 rounded-xl p-5 text-center backdrop-blur-sm border border-white/10 hover:scale-105 transition-all duration-300 cursor-pointer`}>
                   <achievement.icon className="w-10 h-10 text-[#d4af37] mx-auto mb-3" />
                   <div className="text-lg font-bold text-white">{achievement.title}</div>
