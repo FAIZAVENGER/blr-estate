@@ -11,9 +11,12 @@ import {
   Mail as MailIcon, Phone as PhoneIcon, MapPin as MapPinIcon, 
   Clock as ClockIcon, Calendar as CalendarIcon, CheckCircle as CheckIcon,
   ArrowRight, Quote, Briefcase, Coffee, Gift, HeartHandshake, Maximize, Minimize,
-  MessageCircle, Rocket
+  MessageCircle, Rocket, PlusCircle, Briefcase as BriefcaseIcon
 } from 'lucide-react';
 import { propertyAPI, authAPI } from './services/api';
+import BrochureGenerator from './components/BrochureGenerator';
+import DeleteConfirmationModal from './components/DeleteConfirmationModal';
+import PortfolioPage from './components/PortfolioPage';
 import './App.css';
 
 // Professional background image
@@ -24,7 +27,8 @@ const DEFAULT_IMAGES = {
   apartment: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=500&fit=crop",
   villa: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&h=500&fit=crop",
   penthouse: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&h=500&fit=crop",
-  house: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop"
+  house: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
+  plot: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop"
 };
 
 // WhatsApp number for contact
@@ -56,8 +60,16 @@ const A1BuildersRealEstate = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fullscreenImage, setFullscreenImage] = useState(null);
+  
+  // New state variables for added features
+  const [showBrochureGenerator, setShowBrochureGenerator] = useState(false);
+  const [selectedPropertyForBrochure, setSelectedPropertyForBrochure] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [propertyToDelete, setPropertyToDelete] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  // Check backend status - FIXED: Use the Render backend URL
+  // Check backend status
   useEffect(() => {
     const checkBackend = async () => {
       try {
@@ -232,16 +244,27 @@ const A1BuildersRealEstate = () => {
     setBedrooms('all');
   };
 
-  const handleDeleteProperty = async (propertyId) => {
-    if (window.confirm('Are you sure you want to delete this property?')) {
+  const handleDeleteProperty = async (propertyId, propertyTitle) => {
+    setPropertyToDelete({ id: propertyId, title: propertyTitle });
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteProperty = async () => {
+    if (propertyToDelete) {
       try {
-        await propertyAPI.delete(propertyId);
-        alert('✅ Property deleted successfully!');
+        await propertyAPI.delete(propertyToDelete.id);
+        setSuccessMessage('✅ Property deleted successfully!');
+        setTimeout(() => setSuccessMessage(null), 3000);
         await refreshProperties();
-        setCurrentPage('home');
+        if (currentPage === 'property-detail') {
+          setCurrentPage('home');
+        }
       } catch (error) {
-        console.error('Error deleting property:', error);
-        alert('Failed to delete property: ' + error.message);
+        setErrorMessage('Failed to delete property: ' + error.message);
+        setTimeout(() => setErrorMessage(null), 3000);
+      } finally {
+        setShowDeleteModal(false);
+        setPropertyToDelete(null);
       }
     }
   };
@@ -249,13 +272,14 @@ const A1BuildersRealEstate = () => {
   const handleUpdateProperty = async (propertyId, updatedData) => {
     try {
       await propertyAPI.update(propertyId, updatedData);
-      alert('✅ Property updated successfully!');
+      setSuccessMessage('✅ Property updated successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
       await refreshProperties();
       setIsEditing(false);
       setCurrentPage('home');
     } catch (error) {
-      console.error('Error updating property:', error);
-      alert('Failed to update property: ' + error.message);
+      setErrorMessage('Failed to update property: ' + error.message);
+      setTimeout(() => setErrorMessage(null), 3000);
     }
   };
 
@@ -274,6 +298,8 @@ const A1BuildersRealEstate = () => {
         return DEFAULT_IMAGES.penthouse;
       case 'Independent House':
         return DEFAULT_IMAGES.house;
+      case 'Plot':
+        return DEFAULT_IMAGES.plot;
       default:
         return DEFAULT_IMAGES.apartment;
     }
@@ -407,30 +433,35 @@ const A1BuildersRealEstate = () => {
                       <option value="Villa">Villa</option>
                       <option value="Penthouse">Penthouse</option>
                       <option value="Independent House">Independent House</option>
+                      <option value="Plot">Plot</option>
                     </select>
                   </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
-                    <input
-                      type="number"
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                      value={editFormData.bedrooms}
-                      onChange={(e) => setEditFormData({...editFormData, bedrooms: parseInt(e.target.value)})}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
-                    <input
-                      type="number"
-                      required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                      value={editFormData.bathrooms}
-                      onChange={(e) => setEditFormData({...editFormData, bathrooms: parseInt(e.target.value)})}
-                    />
-                  </div>
+                  {editFormData.type !== 'Plot' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+                        <input
+                          type="number"
+                          required
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          value={editFormData.bedrooms}
+                          onChange={(e) => setEditFormData({...editFormData, bedrooms: parseInt(e.target.value)})}
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+                        <input
+                          type="number"
+                          required
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          value={editFormData.bathrooms}
+                          onChange={(e) => setEditFormData({...editFormData, bathrooms: parseInt(e.target.value)})}
+                        />
+                      </div>
+                    </>
+                  )}
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Area (sqft)</label>
@@ -519,7 +550,7 @@ const A1BuildersRealEstate = () => {
                       Edit
                     </button>
                     <button 
-                      onClick={() => handleDeleteProperty(property._id)}
+                      onClick={() => handleDeleteProperty(property._id, property.title)}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-all"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -531,7 +562,8 @@ const A1BuildersRealEstate = () => {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
                   onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
-                    alert('Link copied to clipboard!');
+                    setSuccessMessage('Link copied to clipboard!');
+                    setTimeout(() => setSuccessMessage(null), 3000);
                   }}
                 >
                   <Share2 className="w-4 h-4" />
@@ -544,6 +576,18 @@ const A1BuildersRealEstate = () => {
                   <Heart className={`w-4 h-4 transition-all ${favorites.includes(property._id) ? 'fill-red-500 text-red-500' : ''}`} />
                   Save
                 </button>
+                {userRole === 'owner' && (
+                  <button 
+                    onClick={() => {
+                      setSelectedPropertyForBrochure(property);
+                      setShowBrochureGenerator(true);
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  >
+                    <FileText className="w-4 h-4" />
+                    Brochure
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -630,20 +674,32 @@ const A1BuildersRealEstate = () => {
               </div>
 
               <div className="grid grid-cols-4 gap-4 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <div className="text-center">
-                  <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Bed className="w-6 h-6 text-gray-700" />
+                {property.type !== 'Plot' ? (
+                  <>
+                    <div className="text-center">
+                      <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Bed className="w-6 h-6 text-gray-700" />
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">{property.bedrooms}</div>
+                      <div className="text-sm text-gray-500">Bedrooms</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <Bath className="w-6 h-6 text-gray-700" />
+                      </div>
+                      <div className="text-xl font-bold text-gray-900">{property.bathrooms}</div>
+                      <div className="text-sm text-gray-500">Bathrooms</div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="col-span-2 text-center">
+                    <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <MapPin className="w-6 h-6 text-gray-700" />
+                    </div>
+                    <div className="text-xl font-bold text-gray-900">{property.area}</div>
+                    <div className="text-sm text-gray-500">Plot Size (sqft)</div>
                   </div>
-                  <div className="text-xl font-bold text-gray-900">{property.bedrooms}</div>
-                  <div className="text-sm text-gray-500">Bedrooms</div>
-                </div>
-                <div className="text-center">
-                  <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Bath className="w-6 h-6 text-gray-700" />
-                  </div>
-                  <div className="text-xl font-bold text-gray-900">{property.bathrooms}</div>
-                  <div className="text-sm text-gray-500">Bathrooms</div>
-                </div>
+                )}
                 <div className="text-center">
                   <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
                     <Square className="w-6 h-6 text-gray-700" />
@@ -705,7 +761,7 @@ const A1BuildersRealEstate = () => {
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-24">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">Schedule a Visit</h3>
-                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); alert('✅ Visit scheduled successfully! Our team will contact you soon.'); }}>
+                <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setSuccessMessage('✅ Visit scheduled successfully! Our team will contact you soon.'); setTimeout(() => setSuccessMessage(null), 3000); }}>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
                     <input
@@ -779,9 +835,22 @@ const A1BuildersRealEstate = () => {
       description: '',
       listingType: 'buy'
     });
-
+    
+    const [plotSize, setPlotSize] = useState('');
     const [imagePreviews, setImagePreviews] = useState([]);
     const [uploading, setUploading] = useState(false);
+    const [amenities, setAmenities] = useState([
+      { name: 'High-Speed WiFi', icon: 'Wifi', selected: true },
+      { name: 'Covered Parking', icon: 'Car', selected: true },
+      { name: 'Fitness Center', icon: 'Dumbbell', selected: false },
+      { name: 'Garden & Park', icon: 'TreePine', selected: false },
+      { name: '24/7 Security', icon: 'ShieldCheck', selected: true },
+      { name: 'CCTV Surveillance', icon: 'Camera', selected: false },
+      { name: 'Swimming Pool', icon: 'Droplet', selected: false },
+      { name: 'Club House', icon: 'Building', selected: false },
+      { name: 'Children\'s Play Area', icon: 'Users', selected: false },
+      { name: 'Power Backup', icon: 'Zap', selected: true }
+    ]);
 
     const handleFileChange = (e) => {
       const files = Array.from(e.target.files);
@@ -811,19 +880,23 @@ const A1BuildersRealEstate = () => {
           imageUrl = imagePreviews[0];
         }
 
+        const selectedAmenities = amenities.filter(a => a.selected).map(a => ({ name: a.name, icon: a.icon }));
+
         const propertyData = {
           title: formData.title,
           location: formData.location,
           price: parseInt(formData.price),
           type: formData.type,
-          bedrooms: parseInt(formData.bedrooms),
-          bathrooms: parseInt(formData.bathrooms),
+          bedrooms: formData.type !== 'Plot' ? parseInt(formData.bedrooms) : 0,
+          bathrooms: formData.type !== 'Plot' ? parseInt(formData.bathrooms) : 0,
           area: parseInt(formData.area),
           description: formData.description,
           listingType: formData.listingType,
           featured: false,
           image: imageUrl,
-          images: imagePreviews
+          images: imagePreviews,
+          amenities: selectedAmenities,
+          plotSize: formData.type === 'Plot' ? parseInt(plotSize) : null
         };
 
         console.log('Submitting property:', propertyData);
@@ -831,7 +904,8 @@ const A1BuildersRealEstate = () => {
         const response = await propertyAPI.create(propertyData);
         
         console.log('Property created:', response.data);
-        alert('✅ Property listed successfully!');
+        setSuccessMessage('✅ Property listed successfully!');
+        setTimeout(() => setSuccessMessage(null), 3000);
         
         setFormData({
           title: '',
@@ -844,13 +918,16 @@ const A1BuildersRealEstate = () => {
           description: '',
           listingType: 'buy'
         });
+        setPlotSize('');
         setImagePreviews([]);
+        setAmenities(amenities.map(a => ({ ...a, selected: a.name === 'High-Speed WiFi' || a.name === 'Covered Parking' || a.name === '24/7 Security' })));
         
         await refreshProperties();
         setCurrentPage('home');
       } catch (error) {
         console.error('Error listing property:', error);
-        alert('Error listing property: ' + (error.response?.data?.message || error.message));
+        setErrorMessage('Error listing property: ' + (error.response?.data?.message || error.message));
+        setTimeout(() => setErrorMessage(null), 3000);
       } finally {
         setUploading(false);
       }
@@ -1002,34 +1079,39 @@ const A1BuildersRealEstate = () => {
                       <option value="Villa">Villa</option>
                       <option value="Penthouse">Penthouse</option>
                       <option value="Independent House">Independent House</option>
+                      <option value="Plot">Plot / Land</option>
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms *</label>
-                    <input
-                      type="number"
-                      required
-                      min="1"
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                      placeholder="e.g., 3"
-                      value={formData.bedrooms}
-                      onChange={(e) => setFormData({...formData, bedrooms: e.target.value})}
-                    />
-                  </div>
+                  {formData.type !== 'Plot' && (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms *</label>
+                        <input
+                          type="number"
+                          required
+                          min="1"
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          placeholder="e.g., 3"
+                          value={formData.bedrooms}
+                          onChange={(e) => setFormData({...formData, bedrooms: e.target.value})}
+                        />
+                      </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Bathrooms *</label>
-                    <input
-                      type="number"
-                      required
-                      min="1"
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                      placeholder="e.g., 3"
-                      value={formData.bathrooms}
-                      onChange={(e) => setFormData({...formData, bathrooms: e.target.value})}
-                    />
-                  </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Bathrooms *</label>
+                        <input
+                          type="number"
+                          required
+                          min="1"
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          placeholder="e.g., 3"
+                          value={formData.bathrooms}
+                          onChange={(e) => setFormData({...formData, bathrooms: e.target.value})}
+                        />
+                      </div>
+                    </>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Area (sqft) *</label>
@@ -1037,11 +1119,32 @@ const A1BuildersRealEstate = () => {
                       type="number"
                       required
                       className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
-                      placeholder="e.g., 1800"
+                      placeholder={formData.type === 'Plot' ? "e.g., 2400 (Plot Size)" : "e.g., 1800"}
                       value={formData.area}
                       onChange={(e) => setFormData({...formData, area: e.target.value})}
                     />
                   </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Amenities</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {amenities.map((amenity, index) => (
+                    <label key={index} className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all">
+                      <input
+                        type="checkbox"
+                        checked={amenity.selected}
+                        onChange={(e) => {
+                          const newAmenities = [...amenities];
+                          newAmenities[index].selected = e.target.checked;
+                          setAmenities(newAmenities);
+                        }}
+                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                      />
+                      <span className="text-sm text-gray-700">{amenity.name}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
@@ -1368,8 +1471,7 @@ const A1BuildersRealEstate = () => {
         </header>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Hero Section */}
-          <div className="text-center mb-20">
+          <div className="text-center mb-20 animate-fadeInUp">
             <div className="inline-block p-4 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
               <Building2 className="w-12 h-12 text-white" />
             </div>
@@ -1382,8 +1484,7 @@ const A1BuildersRealEstate = () => {
             </p>
           </div>
 
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 stagger-children">
             {stats.map((stat, index) => (
               <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
                 <div className="bg-gradient-to-r from-gray-900 to-gray-700 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -1397,9 +1498,8 @@ const A1BuildersRealEstate = () => {
             ))}
           </div>
 
-          {/* Mission Vision Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative animate-fadeInLeft">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
@@ -1412,7 +1512,7 @@ const A1BuildersRealEstate = () => {
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative animate-fadeInRight">
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
@@ -1427,7 +1527,6 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* Core Values */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
@@ -1435,7 +1534,7 @@ const A1BuildersRealEstate = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((value, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-scaleIn" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className={`w-14 h-14 bg-gradient-to-r ${value.color} rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                     <value.icon className="w-7 h-7 text-white" />
                   </div>
@@ -1446,7 +1545,6 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* Journey Timeline */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
@@ -1456,7 +1554,7 @@ const A1BuildersRealEstate = () => {
               <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-gray-900 to-gray-400 hidden md:block"></div>
               <div className="space-y-8">
                 {milestones.map((milestone, index) => (
-                  <div key={index} className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                  <div key={index} className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} animate-fadeInUp`} style={{ animationDelay: `${index * 0.1}s` }}>
                     <div className="md:w-1/2 p-4">
                       <div className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform hover:-translate-y-1 transition-all duration-300`}>
                         <div className="flex items-center gap-3 mb-3">
@@ -1479,7 +1577,6 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* Team Section */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet Our Leadership</h2>
@@ -1487,7 +1584,7 @@ const A1BuildersRealEstate = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamMembers.map((member, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-scaleIn" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className="relative">
                     <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200 hover:border-amber-400 transition-all duration-300" />
                   </div>
@@ -1506,7 +1603,6 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* Testimonials Section */}
           <div className="mb-20">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
@@ -1514,7 +1610,7 @@ const A1BuildersRealEstate = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-fadeInUp" style={{ animationDelay: `${index * 0.1}s` }}>
                   <Quote className="w-8 h-8 text-amber-400 mb-4 opacity-50" />
                   <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.content}"</p>
                   <div className="flex items-center gap-3">
@@ -1534,12 +1630,11 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* CTA Section */}
           <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
             <div className="relative z-10">
-              <Crown className="w-16 h-16 text-amber-400 mx-auto mb-4" />
+              <Crown className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-float" />
               <h2 className="text-3xl font-bold text-white mb-4">Ready to Find Your Dream Home?</h2>
               <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
                 Join thousands of happy homeowners who found their perfect property with A1 Builders
@@ -1570,7 +1665,6 @@ const A1BuildersRealEstate = () => {
   const HomePage = () => {
     return (
       <div className="min-h-screen bg-white">
-        {/* Header */}
         <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
@@ -1607,6 +1701,13 @@ const A1BuildersRealEstate = () => {
                   }`}
                 >
                   Rent
+                </button>
+                <button 
+                  onClick={() => setCurrentPage('portfolio')}
+                  className="text-gray-600 hover:text-gray-900 transition-all text-sm font-medium flex items-center gap-1"
+                >
+                  <BriefcaseIcon className="w-4 h-4" />
+                  Portfolio
                 </button>
                 <button 
                   onClick={() => setCurrentPage('about')} 
@@ -1662,6 +1763,9 @@ const A1BuildersRealEstate = () => {
                 <button onClick={() => { setActiveTab('rent'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
                   Rent
                 </button>
+                <button onClick={() => { setCurrentPage('portfolio'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                  Portfolio
+                </button>
                 <button onClick={() => { setCurrentPage('about'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
                   About
                 </button>
@@ -1699,7 +1803,6 @@ const A1BuildersRealEstate = () => {
           )}
         </header>
 
-        {/* Hero Section */}
         <section className="relative h-[550px] overflow-hidden">
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -1712,7 +1815,7 @@ const A1BuildersRealEstate = () => {
           <div className="absolute inset-0 bg-black/50" />
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
-            <div className="max-w-3xl">
+            <div className="max-w-3xl animate-fadeInUp">
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                 Find Your <span className="text-amber-400">Dream Home</span><br />
                 in Bangalore
@@ -1743,7 +1846,7 @@ const A1BuildersRealEstate = () => {
               </div>
 
               {showFilters && (
-                <div className="mt-4 bg-white rounded-xl shadow-xl p-5">
+                <div className="mt-4 bg-white rounded-xl shadow-xl p-5 animate-scaleIn">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
@@ -1772,6 +1875,7 @@ const A1BuildersRealEstate = () => {
                         <option value="Villa">Villa</option>
                         <option value="Penthouse">Penthouse</option>
                         <option value="Independent House">Independent House</option>
+                        <option value="Plot">Plot / Land</option>
                       </select>
                     </div>
 
@@ -1796,23 +1900,22 @@ const A1BuildersRealEstate = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
         <section className="py-12 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center">
+              <div className="text-center animate-fadeInUp">
                 <div className="text-2xl font-bold text-gray-900">{properties.length}+</div>
                 <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
                 <div className="text-2xl font-bold text-gray-900">50,000+</div>
                 <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
                 <div className="text-2xl font-bold text-gray-900">15+</div>
                 <div className="text-sm text-gray-500 mt-1">Years Experience</div>
               </div>
-              <div className="text-center">
+              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
                 <div className="text-2xl font-bold text-gray-900">100%</div>
                 <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
               </div>
@@ -1820,7 +1923,6 @@ const A1BuildersRealEstate = () => {
           </div>
         </section>
 
-        {/* Properties Section */}
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
@@ -1862,10 +1964,11 @@ const A1BuildersRealEstate = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProperties.map((property) => (
+                {filteredProperties.map((property, index) => (
                   <div 
                     key={property._id} 
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group"
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group property-card animate-fadeInUp"
+                    style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="relative overflow-hidden bg-gray-100 h-56">
                       <img 
@@ -1889,31 +1992,43 @@ const A1BuildersRealEstate = () => {
                         </div>
                       )}
                       
-                      {/* Edit and Delete buttons on each card for all logged in users */}
-                      {isLoggedIn && (
-                        <div className="absolute bottom-3 right-3 flex gap-2">
+                      {isLoggedIn && userRole === 'owner' && (
+                        <>
+                          <div className="absolute bottom-3 right-3 flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                viewPropertyDetails(property);
+                                setIsEditing(true);
+                              }}
+                              className="bg-white text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-all shadow-sm"
+                              title="Edit Property"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteProperty(property._id, property.title);
+                              }}
+                              className="bg-white text-red-600 p-1.5 rounded-full hover:bg-gray-100 transition-all shadow-sm"
+                              title="Delete Property"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              viewPropertyDetails(property);
-                              setIsEditing(true);
+                              setSelectedPropertyForBrochure(property);
+                              setShowBrochureGenerator(true);
                             }}
-                            className="bg-white text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-all shadow-sm"
-                            title="Edit Property"
+                            className="absolute bottom-3 left-3 bg-white text-gray-700 p-1.5 rounded-full hover:bg-gray-100 transition-all shadow-sm"
+                            title="Generate Brochure"
                           >
-                            <Edit2 className="w-3.5 h-3.5" />
+                            <FileText className="w-3.5 h-3.5" />
                           </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteProperty(property._id);
-                            }}
-                            className="bg-white text-red-600 p-1.5 rounded-full hover:bg-gray-100 transition-all shadow-sm"
-                            title="Delete Property"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
+                        </>
                       )}
                       
                       <button
@@ -1941,14 +2056,23 @@ const A1BuildersRealEstate = () => {
                       </div>
 
                       <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                        <div className="flex items-center text-gray-600 gap-2">
-                          <Bed className="w-3.5 h-3.5" />
-                          <span className="text-xs">{property.bedrooms} Beds</span>
-                        </div>
-                        <div className="flex items-center text-gray-600 gap-2">
-                          <Bath className="w-3.5 h-3.5" />
-                          <span className="text-xs">{property.bathrooms} Baths</span>
-                        </div>
+                        {property.type !== 'Plot' ? (
+                          <>
+                            <div className="flex items-center text-gray-600 gap-2">
+                              <Bed className="w-3.5 h-3.5" />
+                              <span className="text-xs">{property.bedrooms} Beds</span>
+                            </div>
+                            <div className="flex items-center text-gray-600 gap-2">
+                              <Bath className="w-3.5 h-3.5" />
+                              <span className="text-xs">{property.bathrooms} Baths</span>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex items-center text-gray-600 gap-2 col-span-2">
+                            <MapPin className="w-3.5 h-3.5" />
+                            <span className="text-xs">Plot / Land</span>
+                          </div>
+                        )}
                         <div className="flex items-center text-gray-600 gap-2">
                           <Square className="w-3.5 h-3.5" />
                           <span className="text-xs">{property.area} sqft</span>
@@ -1969,7 +2093,6 @@ const A1BuildersRealEstate = () => {
           </div>
         </section>
 
-        {/* Footer */}
         <footer className="bg-gray-900 text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -2004,6 +2127,7 @@ const A1BuildersRealEstate = () => {
                 <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
                 <ul className="space-y-3 text-sm">
                   <li><button onClick={() => setCurrentPage('home')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Browse Properties</button></li>
+                  <li><button onClick={() => setCurrentPage('portfolio')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Agent Portfolio</button></li>
                   <li><button onClick={() => setCurrentPage('about')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> About Us</button></li>
                   {userRole === 'owner' && (
                     <li><button onClick={() => setCurrentPage('sell')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> List Property</button></li>
@@ -2129,11 +2253,56 @@ const A1BuildersRealEstate = () => {
   // Main Render
   return (
     <>
+      {/* Success/Error Toasts */}
+      {successMessage && (
+        <div className="fixed top-20 right-4 z-50 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg animate-slideInRight">
+          {successMessage}
+        </div>
+      )}
+      {errorMessage && (
+        <div className="fixed top-20 right-4 z-50 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg animate-slideInRight">
+          {errorMessage}
+        </div>
+      )}
+      
+      {/* Fullscreen Image Modal */}
       {fullscreenImage && (
         <FullscreenImageModal image={fullscreenImage} onClose={() => setFullscreenImage(null)} />
       )}
+      
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeleteProperty}
+        propertyTitle={propertyToDelete?.title}
+      />
+      
+      {/* Brochure Generator Modal */}
+      {showBrochureGenerator && selectedPropertyForBrochure && (
+        <BrochureGenerator
+          property={selectedPropertyForBrochure}
+          onClose={() => {
+            setShowBrochureGenerator(false);
+            setSelectedPropertyForBrochure(null);
+          }}
+          onGenerate={() => {
+            setSuccessMessage('✅ Brochure generated successfully!');
+            setTimeout(() => setSuccessMessage(null), 3000);
+          }}
+        />
+      )}
+      
+      {/* Page Rendering */}
       {currentPage === 'login' && <LoginPage />}
       {currentPage === 'home' && <HomePage />}
+      {currentPage === 'portfolio' && (
+        <PortfolioPage 
+          isOwner={userRole === 'owner'} 
+          userRole={userRole}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
       {currentPage === 'property-detail' && selectedProperty && <PropertyDetailPage property={selectedProperty} />}
       {userRole === 'owner' && currentPage === 'sell' && <SellPropertyPage />}
       {currentPage === 'about' && <AboutPage />}
