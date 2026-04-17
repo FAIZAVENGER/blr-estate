@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Use Render backend URL for production, localhost for development
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://blr-estate-api.onrender.com/api';
 
+// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -10,21 +10,23 @@ const api = axios.create({
   },
 });
 
-// Add token to requests if it exists
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
-// Property API
+// Auth API
+export const authAPI = {
+  register: (userData) => api.post('/auth/register', userData),
+  login: (credentials) => api.post('/auth/login', credentials),
+  getProfile: () => api.get('/auth/profile'),
+};
+
+// Properties API
 export const propertyAPI = {
   getAll: () => api.get('/properties'),
   getById: (id) => api.get(`/properties/${id}`),
@@ -33,11 +35,12 @@ export const propertyAPI = {
   delete: (id) => api.delete(`/properties/${id}`),
 };
 
-// Auth API
-export const authAPI = {
-  register: (data) => api.post('/auth/register', data),
-  login: (data) => api.post('/auth/login', data),
-  getProfile: () => api.get('/auth/profile'),
+// Portfolio API
+export const portfolioAPI = {
+  getPortfolio: () => api.get('/portfolio'),
+  updatePortfolio: (data) => api.put('/portfolio', data),
+  addPhoto: (photo) => api.post('/portfolio/photos', { photo }),
+  removePhoto: (index) => api.delete(`/portfolio/photos/${index}`),
 };
 
 export default api;
