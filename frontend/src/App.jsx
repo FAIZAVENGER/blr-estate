@@ -1437,97 +1437,154 @@ const A1BuildersRealEstate = () => {
     );
   };
 
-  // About Page with GSAP animations
+  // About Page with stunning GSAP animations
   const AboutPage = () => {
     const stats = [
-      { icon: Home, value: properties.length || 0, label: 'Premium Properties', suffix: '+' },
-      { icon: UsersIcon, value: '50,000', label: 'Happy Clients', suffix: '+' },
-      { icon: AwardIcon, value: '15', label: 'Years Experience', suffix: '+' },
-      { icon: Shield, value: '100', label: 'Verified Properties', suffix: '%' }
+      { icon: Home, value: properties.length || 0, label: 'Premium Properties', suffix: '+', color: 'from-blue-500 to-cyan-500' },
+      { icon: UsersIcon, value: '50,000', label: 'Happy Clients', suffix: '+', color: 'from-purple-500 to-pink-500' },
+      { icon: AwardIcon, value: '15', label: 'Years Experience', suffix: '+', color: 'from-yellow-500 to-orange-500' },
+      { icon: Shield, value: '100', label: 'Verified Properties', suffix: '%', color: 'from-green-500 to-emerald-500' }
     ];
 
     const values = [
       { icon: HeartHandshake, title: 'Trust & Transparency', desc: 'We believe in complete transparency in every transaction, building trust that lasts a lifetime.', color: 'from-rose-500 to-pink-500' },
       { icon: Target, title: 'Customer First', desc: 'Our customers are at the heart of everything we do. Their satisfaction is our success.', color: 'from-blue-500 to-cyan-500' },
       { icon: Zap, title: 'Innovation', desc: 'Leveraging cutting-edge technology to provide seamless property discovery experience.', color: 'from-amber-500 to-orange-500' },
-      { icon: Shield, title: 'Quality Assurance', desc: 'Every property listed undergoes rigorous verification to ensure quality and authenticity.', color: 'from-emerald-500 to-teal-500' }
+      { icon: Shield, title: 'Quality Assurance', desc: 'Every property listed undergoes rigorous verification to ensure quality and authenticity.', color: 'from-emerald-500 to-teal-500' },
+      { icon: Globe, title: 'Pan Bangalore Coverage', desc: 'Serving all prime locations across Bangalore metropolitan area.', color: 'from-indigo-500 to-purple-500' },
+      { icon: Clock, title: '24/7 Support', desc: 'Round-the-clock customer support for all your real estate needs.', color: 'from-red-500 to-pink-500' }
     ];
 
     const milestones = [
-      { year: '2010', title: 'The Beginning', desc: 'A1 Builders was founded with a vision to transform real estate in Bangalore.', icon: Rocket },
-      { year: '2013', title: 'First Milestone', desc: 'Helped 1000+ families find their dream homes across Bangalore.', icon: AwardIcon },
-      { year: '2016', title: 'Digital Transformation', desc: 'Launched our online platform for seamless property discovery.', icon: Globe },
-      { year: '2019', title: 'Expansion', desc: 'Expanded to cover all prime locations in Bangalore metropolitan area.', icon: TrendingUp },
-      { year: '2022', title: '50K+ Happy Clients', desc: 'Reached the milestone of serving over 50,000 satisfied customers.', icon: UsersIcon },
-      { year: '2024', title: 'The Future', desc: 'Continuing to innovate and provide the best real estate experience.', icon: Sparkles }
+      { year: '2010', title: 'The Beginning', desc: 'A1 Builders was founded with a vision to transform real estate in Bangalore.', icon: Rocket, image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80' },
+      { year: '2013', title: 'First Milestone', desc: 'Helped 1000+ families find their dream homes across Bangalore.', icon: AwardIcon, image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80' },
+      { year: '2016', title: 'Digital Transformation', desc: 'Launched our online platform for seamless property discovery.', icon: Globe, image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80' },
+      { year: '2019', title: 'Expansion', desc: 'Expanded to cover all prime locations in Bangalore metropolitan area.', icon: TrendingUp, image: 'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=600&q=80' },
+      { year: '2022', title: '50K+ Happy Clients', desc: 'Reached the milestone of serving over 50,000 satisfied customers.', icon: UsersIcon, image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80' },
+      { year: '2024', title: 'The Future', desc: 'Continuing to innovate and provide the best real estate experience.', icon: Sparkles, image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80' }
     ];
 
     // Refs for GSAP animations
     const heroRef = useRef(null);
     const statsGridRef = useRef(null);
     const missionRef = useRef(null);
+    const visionRef = useRef(null);
     const valuesRef = useRef(null);
     const journeyRef = useRef(null);
     const teamRef = useRef(null);
     const ctaRef = useRef(null);
     const statCardsRef = useRef([]);
     const valueCardsRef = useRef([]);
-    const teamCardsRef = useRef([]);
     const milestoneItemsRef = useRef([]);
+    const parallaxBgRef = useRef(null);
 
     useEffect(() => {
-      // Hero section animation
+      // Create ScrollTrigger for each section with slide effect
+      const sections = document.querySelectorAll('.about-section');
+      sections.forEach((section, index) => {
+        gsap.fromTo(section,
+          { opacity: 0, y: 100, rotationX: -20, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            rotationX: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 85%",
+              end: "top 15%",
+              toggleActions: "play reverse play reverse",
+              scrub: 0.5,
+            }
+          }
+        );
+      });
+
+      // Hero section with parallax background
       gsap.fromTo(heroRef.current,
-        { opacity: 0, scale: 0.9, y: 30 },
+        { opacity: 0, scale: 0.8, y: 80, rotationY: 20 },
         {
           opacity: 1,
           scale: 1,
           y: 0,
-          duration: 1,
-          ease: "back.out(1.2)",
+          rotationY: 0,
+          duration: 1.5,
+          ease: "back.out(1.5)",
           scrollTrigger: {
             trigger: heroRef.current,
-            start: "top 80%",
+            start: "top 90%",
             toggleActions: "play none none reverse"
           }
         }
       );
 
-      // Stats cards animation
+      // Parallax background effect
+      if (parallaxBgRef.current) {
+        gsap.to(parallaxBgRef.current, {
+          y: 200,
+          scrollTrigger: {
+            trigger: "body",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+          }
+        });
+      }
+
+      // Stats cards with elastic animation
       gsap.fromTo(statCardsRef.current,
-        { opacity: 0, y: 50, scale: 0.8 },
+        { opacity: 0, scale: 0, rotation: -180 },
         {
           opacity: 1,
-          y: 0,
           scale: 1,
+          rotation: 0,
           duration: 0.8,
           stagger: 0.15,
-          ease: "elastic.out(1, 0.5)",
+          ease: "elastic.out(1, 0.3)",
           scrollTrigger: {
             trigger: statsGridRef.current,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none reverse"
           }
         }
       );
 
-      // Mission and Vision cards
+      // Mission and Vision cards with 3D flip
       gsap.fromTo(missionRef.current,
-        { opacity: 0, x: -80 },
+        { opacity: 0, x: -100, rotationY: 45 },
         {
           opacity: 1,
           x: 0,
+          rotationY: 0,
           duration: 0.8,
-          ease: "power3.out",
+          ease: "back.out(1.2)",
           scrollTrigger: {
             trigger: missionRef.current,
-            start: "top 80%",
+            start: "top 85%",
             toggleActions: "play none none reverse"
           }
         }
       );
 
-      // Values cards animation
+      gsap.fromTo(visionRef.current,
+        { opacity: 0, x: 100, rotationY: -45 },
+        {
+          opacity: 1,
+          x: 0,
+          rotationY: 0,
+          duration: 0.8,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: visionRef.current,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+
+      // Values cards with scale and rotation
       gsap.fromTo(valueCardsRef.current,
         { opacity: 0, scale: 0.6, rotationY: 90 },
         {
@@ -1545,15 +1602,16 @@ const A1BuildersRealEstate = () => {
         }
       );
 
-      // Journey timeline animation
+      // Journey timeline with alternating slide animation
       gsap.fromTo(milestoneItemsRef.current,
-        { opacity: 0, x: (i) => i % 2 === 0 ? -60 : 60 },
+        { opacity: 0, x: (i) => i % 2 === 0 ? -80 : 80, scale: 0.8 },
         {
           opacity: 1,
           x: 0,
-          duration: 0.7,
+          scale: 1,
+          duration: 0.8,
           stagger: 0.2,
-          ease: "power2.out",
+          ease: "power3.out",
           scrollTrigger: {
             trigger: journeyRef.current,
             start: "top 70%",
@@ -1562,33 +1620,15 @@ const A1BuildersRealEstate = () => {
         }
       );
 
-      // Team cards animation
-      gsap.fromTo(teamCardsRef.current,
-        { opacity: 0, scale: 0.7, rotation: 10 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "back.out(0.8)",
-          scrollTrigger: {
-            trigger: teamRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // CTA section animation
+      // CTA section with bounce
       gsap.fromTo(ctaRef.current,
-        { opacity: 0, y: 50, scale: 0.95 },
+        { opacity: 0, y: 80, scale: 0.9 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
           duration: 0.8,
-          ease: "elastic.out(1, 0.5)",
+          ease: "bounce.out",
           scrollTrigger: {
             trigger: ctaRef.current,
             start: "top 85%",
@@ -1598,33 +1638,35 @@ const A1BuildersRealEstate = () => {
       );
 
       // Continuous floating animation for icons
-      gsap.to(".float-icon", {
-        y: -10,
-        duration: 2,
+      gsap.to(".float-icon-about", {
+        y: -15,
+        duration: 2.5,
         repeat: -1,
         yoyo: true,
         ease: "power1.inOut",
-        stagger: 0.2
+        stagger: 0.15
       });
 
-      // Hover animation for stat cards
+      // Hover animations for stat cards
       statCardsRef.current.forEach((card) => {
-        card.addEventListener("mouseenter", () => {
-          gsap.to(card, {
-            y: -10,
-            scale: 1.05,
-            duration: 0.3,
-            ease: "power2.out"
+        if (card) {
+          card.addEventListener("mouseenter", () => {
+            gsap.to(card, {
+              y: -15,
+              scale: 1.05,
+              duration: 0.3,
+              ease: "power2.out"
+            });
           });
-        });
-        card.addEventListener("mouseleave", () => {
-          gsap.to(card, {
-            y: 0,
-            scale: 1,
-            duration: 0.3,
-            ease: "power2.in"
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              y: 0,
+              scale: 1,
+              duration: 0.3,
+              ease: "power2.in"
+            });
           });
-        });
+        }
       });
 
     }, []);
@@ -1636,82 +1678,99 @@ const A1BuildersRealEstate = () => {
       { name: 'Anjali Nair', role: 'Customer Success', image: 'https://randomuser.me/api/portraits/women/4.jpg', bio: 'Making clients happy', whatsapp: '919738634402' }
     ];
 
-    const testimonials = [
-      { name: 'Rahul Mehta', role: 'Homeowner', content: 'A1 Builders helped me find my dream home in Whitefield. The experience was seamless and professional.', rating: 5, image: 'https://randomuser.me/api/portraits/men/1.jpg' },
-      { name: 'Priya Sharma', role: 'Investor', content: 'Excellent platform for property investment. Got great returns on my investment within a year.', rating: 5, image: 'https://randomuser.me/api/portraits/women/2.jpg' },
-      { name: 'Amit Kumar', role: 'First-time Buyer', content: 'The team was very supportive throughout the buying process. Highly recommended!', rating: 5, image: 'https://randomuser.me/api/portraits/men/3.jpg' }
-    ];
-
     return (
-      <div className="min-h-screen bg-white">
-        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
+        {/* Animated Background */}
+        <div ref={parallaxBgRef} className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#d4af37]/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+          
+          {/* Floating particles */}
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-[#d4af37]/40 rounded-full"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                animation: `floatAbout ${3 + Math.random() * 5}s infinite ease-in-out`,
+                animationDelay: `${Math.random() * 5}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <header className="bg-white/10 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button
               onClick={() => setCurrentPage('home')}
-              className="flex items-center gap-2 text-gray-600 hover:text-[#1a1a2e] transition-all group"
+              className="group flex items-center gap-2 text-white/80 hover:text-[#d4af37] transition-all duration-300"
             >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
               <span className="font-medium">Back to Home</span>
             </button>
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
           {/* Hero Section */}
-          <div ref={heroRef} className="text-center mb-20">
-            <div className="inline-block p-4 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
-              <Building2 className="w-12 h-12 text-[#d4af37]" />
+          <div ref={heroRef} className="about-section text-center mb-20">
+            <div className="inline-block p-4 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-2xl mb-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
+              <Building2 className="w-14 h-14 text-gray-900" />
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] mb-6">
-              About <span className="bg-gradient-to-r from-[#1a1a2e] to-[#d4af37] bg-clip-text text-transparent">A1 Builders</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent animate-gradient">
+                About A1 Builders
+              </span>
             </h1>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Bangalore's premier real estate platform connecting dreams with reality through technology, 
               transparency, and trusted partnerships since 2010.
             </p>
           </div>
 
           {/* Stats Section */}
-          <div ref={statsGridRef} className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+          <div ref={statsGridRef} className="about-section grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
             {stats.map((stat, index) => (
               <div 
                 key={index} 
                 ref={el => statCardsRef.current[index] = el}
-                className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 cursor-pointer"
+                className={`bg-gradient-to-br ${stat.color} bg-opacity-10 backdrop-blur-xl rounded-2xl p-6 text-center border border-white/20 cursor-pointer`}
               >
-                <div className="float-icon bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <stat.icon className="w-8 h-8 text-[#d4af37]" />
+                <div className="float-icon-about w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <stat.icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-3xl font-bold text-[#1a1a2e]">
+                <h3 className="text-3xl font-bold text-white">
                   {stat.value}{stat.suffix}
                 </h3>
-                <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
+                <p className="text-gray-300 mt-2 font-medium">{stat.label}</p>
               </div>
             ))}
           </div>
 
           {/* Mission and Vision */}
-          <div ref={missionRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-            <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+          <div className="about-section grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
+            <div ref={missionRef} className="group relative overflow-hidden bg-gradient-to-br from-blue-900/40 to-purple-900/40 backdrop-blur-xl rounded-3xl p-8 border border-white/20 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/20 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-500"></div>
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300">
-                  <Target className="w-7 h-7 text-[#d4af37]" />
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-5 group-hover:rotate-12 transition-transform duration-300">
+                  <Target className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Our Mission</h3>
+                <h3 className="text-2xl font-bold text-white mb-3">Our Mission</h3>
                 <p className="text-gray-300 leading-relaxed">
                   To revolutionize property discovery in Bangalore by providing a seamless, transparent, 
                   and comprehensive platform that connects dream homes with happy families.
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden group">
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500"></div>
+            <div ref={visionRef} className="group relative overflow-hidden bg-gradient-to-br from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-3xl p-8 border border-white/20 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl">
+              <div className="absolute bottom-0 left-0 w-40 h-40 bg-pink-500/20 rounded-full -ml-20 -mb-20 group-hover:scale-150 transition-transform duration-500"></div>
               <div className="relative z-10">
-                <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:-rotate-12 transition-transform duration-300">
-                  <Globe className="w-7 h-7 text-[#d4af37]" />
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-5 group-hover:-rotate-12 transition-transform duration-300">
+                  <Globe className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Our Vision</h3>
+                <h3 className="text-2xl font-bold text-white mb-3">Our Vision</h3>
                 <p className="text-gray-300 leading-relaxed">
                   To become India's most trusted real estate ecosystem, recognized for innovation, 
                   integrity, and exceptional customer service.
@@ -1721,37 +1780,42 @@ const A1BuildersRealEstate = () => {
           </div>
 
           {/* Core Values */}
-          <div ref={valuesRef} className="mb-20">
+          <div ref={valuesRef} className="about-section mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Core Values</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">The principles that guide everything we do</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Our Core Values</h2>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">The principles that guide everything we do</p>
+              <div className="w-24 h-1 bg-gradient-to-r from-[#d4af37] to-amber-500 mx-auto mt-6 rounded-full"></div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {values.map((value, index) => (
                 <div 
                   key={index} 
                   ref={el => valueCardsRef.current[index] = el}
-                  className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                  className={`group relative overflow-hidden bg-gradient-to-br ${value.color} bg-opacity-10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer`}
                 >
-                  <div className={`w-14 h-14 bg-gradient-to-r ${value.color} rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
-                    <value.icon className="w-7 h-7 text-white" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative z-10">
+                    <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300">
+                      <value.icon className="w-7 h-7 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
+                    <p className="text-gray-300 text-sm leading-relaxed">{value.desc}</p>
                   </div>
-                  <h3 className="text-lg font-bold text-[#1a1a2e] mb-2">{value.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{value.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Journey Timeline */}
-          <div ref={journeyRef} className="mb-20">
+          <div ref={journeyRef} className="about-section mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Journey</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">15+ years of excellence in real estate</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Our Journey</h2>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">15+ years of excellence in real estate</p>
+              <div className="w-24 h-1 bg-gradient-to-r from-[#d4af37] to-amber-500 mx-auto mt-6 rounded-full"></div>
             </div>
             <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-[#1a1a2e] to-[#d4af37] hidden md:block"></div>
-              <div className="space-y-8">
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-[#d4af37] via-amber-500 to-[#d4af37] hidden md:block rounded-full"></div>
+              <div className="space-y-12">
                 {milestones.map((milestone, index) => (
                   <div 
                     key={index} 
@@ -1759,20 +1823,22 @@ const A1BuildersRealEstate = () => {
                     className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
                   >
                     <div className="md:w-1/2 p-4">
-                      <div className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform hover:-translate-y-1 transition-all duration-300 hover:shadow-xl`}>
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-xl flex items-center justify-center shadow-md">
-                            <milestone.icon className="w-6 h-6 text-[#d4af37]" />
+                      <div className={`bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/20 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform transition-all duration-500 hover:scale-105 hover:shadow-2xl`}>
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-14 h-14 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <milestone.icon className="w-7 h-7 text-gray-900" />
                           </div>
                           <div>
                             <span className="text-sm font-bold text-[#d4af37]">{milestone.year}</span>
-                            <h3 className="text-xl font-bold text-[#1a1a2e]">{milestone.title}</h3>
+                            <h3 className="text-xl font-bold text-white">{milestone.title}</h3>
                           </div>
                         </div>
-                        <p className="text-gray-500 leading-relaxed">{milestone.desc}</p>
+                        <p className="text-gray-300 leading-relaxed">{milestone.desc}</p>
                       </div>
                     </div>
-                    <div className="hidden md:block w-8 h-8 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-full border-4 border-white shadow-md z-10"></div>
+                    <div className="hidden md:block w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-full border-4 border-gray-800 shadow-lg z-10 relative">
+                      <div className="absolute inset-0 rounded-full animate-ping bg-[#d4af37] opacity-75"></div>
+                    </div>
                     <div className="md:w-1/2"></div>
                   </div>
                 ))}
@@ -1780,87 +1846,31 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          {/* Team Section */}
-          <div ref={teamRef} className="mb-20">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Meet Our Leadership</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">The passionate team behind A1 Builders</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {teamMembers.map((member, index) => (
-                <div 
-                  key={index} 
-                  ref={el => teamCardsRef.current[index] = el}
-                  className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 cursor-pointer"
-                >
-                  <div className="relative">
-                    <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200 hover:border-[#d4af37] transition-all duration-300" />
-                  </div>
-                  <h3 className="text-lg font-bold text-[#1a1a2e]">{member.name}</h3>
-                  <p className="text-[#d4af37] text-sm font-medium mb-2">{member.role}</p>
-                  <p className="text-gray-500 text-xs">{member.bio}</p>
-                  <button
-                    onClick={() => window.open(`https://wa.me/${member.whatsapp}?text=${encodeURIComponent("Hello! I'm interested in your services at A1 Builders.")}`, '_blank')}
-                    className="mt-3 inline-flex items-center gap-1 text-xs bg-green-500 text-white px-3 py-1 rounded-full hover:bg-green-600 transition-all"
-                  >
-                    <MessageCircle className="w-3 h-3" />
-                    Contact on WhatsApp
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Testimonials */}
-          <div className="mb-20">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">What Our Clients Say</h2>
-              <p className="text-gray-500 max-w-2xl mx-auto">Real stories from our happy customers</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300">
-                  <Quote className="w-8 h-8 text-[#d4af37] mb-4 opacity-50" />
-                  <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.content}"</p>
-                  <div className="flex items-center gap-3">
-                    <img src={testimonial.image} alt={testimonial.name} className="w-10 h-10 rounded-full object-cover" />
-                    <div>
-                      <h4 className="font-semibold text-[#1a1a2e]">{testimonial.name}</h4>
-                      <p className="text-xs text-gray-500">{testimonial.role}</p>
-                    </div>
-                    <div className="flex ml-auto gap-0.5">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-[#d4af37] text-[#d4af37]" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* CTA Section */}
-          <div ref={ctaRef} className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -mr-32 -mt-32"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -ml-32 -mb-32"></div>
+          <div ref={ctaRef} className="about-section relative overflow-hidden bg-gradient-to-r from-[#1a1a2e] via-gray-800 to-[#1a1a2e] rounded-3xl p-12 text-center border border-[#d4af37]/30 shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -mr-32 -mt-32 animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -ml-32 -mb-32 animate-pulse delay-1000"></div>
             <div className="relative z-10">
-              <Crown className="w-16 h-16 text-[#d4af37] mx-auto mb-4 animate-float" />
-              <h2 className="text-3xl font-bold text-white mb-4">Ready to Find Your Dream Home?</h2>
-              <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
+              <div className="w-20 h-20 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-12">
+                <Crown className="w-10 h-10 text-gray-900" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Find Your Dream Home?</h2>
+              <p className="text-gray-300 mb-8 max-w-2xl mx-auto text-lg">
                 Join thousands of happy homeowners who found their perfect property with A1 Builders
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <button
                   onClick={() => setCurrentPage('home')}
-                  className="bg-white text-[#1a1a2e] px-8 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                  className="group relative overflow-hidden bg-gradient-to-r from-[#d4af37] to-amber-500 text-gray-900 px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-[#d4af37]/30 transform hover:-translate-y-1"
                 >
-                  Browse Properties
+                  <span className="relative z-10">Browse Properties</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-[#d4af37] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
                 <button
                   onClick={openWhatsApp}
-                  className="bg-green-600 text-white px-8 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
+                  className="group flex items-center gap-2 bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                   Contact Us on WhatsApp
                 </button>
               </div>
@@ -1894,48 +1904,55 @@ const A1BuildersRealEstate = () => {
 
     return (
       <div className="min-h-screen bg-white">
-        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+        {/* Enhanced Header with Glass Morphism */}
+        <header className="bg-white/95 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 shadow-lg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div 
                 className="flex items-center space-x-3 cursor-pointer group"
                 onClick={() => setCurrentPage('home')}
               >
-                <div className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] p-2 rounded-lg transform group-hover:scale-105 transition-transform">
-                  <Building2 className="text-[#d4af37] w-5 h-5" />
+                <div className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] p-2 rounded-lg transform group-hover:scale-105 transition-all duration-300 shadow-md">
+                  <Building2 className="text-[#d4af37] w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-[#1a1a2e]">A1 Builders</h1>
-                  <p className="text-xs text-gray-500">Premium Properties</p>
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] bg-clip-text text-transparent">A1 Builders</h1>
+                  <p className="text-xs text-gray-400">Premium Properties</p>
                 </div>
               </div>
               
               <nav className="hidden md:flex items-center space-x-8">
                 <button 
                   onClick={() => setActiveTab('buy')} 
-                  className={`transition-all text-sm font-medium ${
+                  className={`transition-all text-sm font-medium relative ${
                     activeTab === 'buy' 
-                      ? 'text-[#1a1a2e] border-b-2 border-[#d4af37]' 
+                      ? 'text-[#1a1a2e]' 
                       : 'text-gray-600 hover:text-[#1a1a2e]'
                   }`}
                 >
                   Buy
+                  {activeTab === 'buy' && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-full"></div>
+                  )}
                 </button>
                 <button 
                   onClick={() => setActiveTab('rent')} 
-                  className={`transition-all text-sm font-medium ${
+                  className={`transition-all text-sm font-medium relative ${
                     activeTab === 'rent' 
-                      ? 'text-[#1a1a2e] border-b-2 border-[#d4af37]' 
+                      ? 'text-[#1a1a2e]' 
                       : 'text-gray-600 hover:text-[#1a1a2e]'
                   }`}
                 >
                   Rent
+                  {activeTab === 'rent' && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-full"></div>
+                  )}
                 </button>
                 <button 
                   onClick={() => setCurrentPage('portfolio')}
-                  className="text-gray-600 hover:text-[#1a1a2e] transition-all text-sm font-medium flex items-center gap-1"
+                  className="text-gray-600 hover:text-[#1a1a2e] transition-all text-sm font-medium flex items-center gap-1 relative group"
                 >
-                  <BriefcaseIcon className="w-4 h-4" />
+                  <BriefcaseIcon className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
                   Portfolio
                 </button>
                 <button 
@@ -1958,7 +1975,7 @@ const A1BuildersRealEstate = () => {
                     <span className="text-gray-700 text-sm">Hi, {userName}</span>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-1.5 rounded-lg text-sm hover:shadow-lg transition-all"
+                      className="flex items-center gap-2 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-1.5 rounded-lg text-sm hover:shadow-lg transition-all duration-300 hover:scale-105"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       Logout
@@ -1967,7 +1984,7 @@ const A1BuildersRealEstate = () => {
                 ) : (
                   <button
                     onClick={() => setCurrentPage('login')}
-                    className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-5 py-1.5 rounded-lg text-sm font-medium hover:shadow-lg transition-all"
+                    className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-5 py-1.5 rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-300 hover:scale-105"
                   >
                     Login / Sign Up
                   </button>
@@ -1984,7 +2001,7 @@ const A1BuildersRealEstate = () => {
           </div>
 
           {mobileMenu && (
-            <div className="md:hidden bg-white border-t border-gray-100">
+            <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
               <nav className="flex flex-col space-y-3 px-4 py-5">
                 <button onClick={() => { setActiveTab('buy'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                   Buy
@@ -2129,7 +2146,8 @@ const A1BuildersRealEstate = () => {
           </div>
         </section>
 
-        <section className="py-12 bg-gray-50">
+        {/* Stats Section - Fixed to load only once */}
+        <section className="py-12 bg-gradient-to-r from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center animate-fadeInUp">
