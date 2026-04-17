@@ -77,7 +77,7 @@ const A1BuildersRealEstate = () => {
   // Refs for Home Page GSAP Animations
   const heroTitleRef = useRef(null);
   const heroSubtitleRef = useRef(null);
-  const heroButtonRef = useRef(null);
+  const heroSearchRef = useRef(null);
   const statsSectionRef = useRef(null);
   const statsCardsRef = useRef([]);
   const propertiesSectionRef = useRef(null);
@@ -154,7 +154,7 @@ const A1BuildersRealEstate = () => {
       // Use Promise.race for timeout
       const fetchPromise = propertyAPI.getAll();
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 10000)
+        setTimeout(() => reject(new Error('Request timeout')), 15000)
       );
       
       const response = await Promise.race([fetchPromise, timeoutPromise]);
@@ -1571,22 +1571,24 @@ const A1BuildersRealEstate = () => {
       });
 
       // Hero section with parallax background
-      gsap.fromTo(heroRef.current,
-        { opacity: 0, scale: 0.8, y: 80, rotationY: 20 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotationY: 0,
-          duration: 1.5,
-          ease: "back.out(1.5)",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top 90%",
-            toggleActions: "play none none reverse"
+      if (heroRef.current) {
+        gsap.fromTo(heroRef.current,
+          { opacity: 0, scale: 0.8, y: 80, rotationY: 20 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            rotationY: 0,
+            duration: 1.5,
+            ease: "back.out(1.5)",
+            scrollTrigger: {
+              trigger: heroRef.current,
+              start: "top 90%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Parallax background effect
       if (parallaxBgRef.current) {
@@ -1602,108 +1604,120 @@ const A1BuildersRealEstate = () => {
       }
 
       // Stats cards with elastic animation
-      gsap.fromTo(statCardsRef.current,
-        { opacity: 0, scale: 0, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "elastic.out(1, 0.3)",
-          scrollTrigger: {
-            trigger: statsGridRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+      if (statCardsRef.current.length) {
+        gsap.fromTo(statCardsRef.current,
+          { opacity: 0, scale: 0, rotation: -180 },
+          {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "elastic.out(1, 0.3)",
+            scrollTrigger: {
+              trigger: statsGridRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Mission and Vision cards with 3D flip
-      gsap.fromTo(missionRef.current,
-        { opacity: 0, x: -100, rotationY: 45 },
-        {
-          opacity: 1,
-          x: 0,
-          rotationY: 0,
-          duration: 0.8,
-          ease: "back.out(1.2)",
-          scrollTrigger: {
-            trigger: missionRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+      if (missionRef.current) {
+        gsap.fromTo(missionRef.current,
+          { opacity: 0, x: -100, rotationY: 45 },
+          {
+            opacity: 1,
+            x: 0,
+            rotationY: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: missionRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
-      gsap.fromTo(visionRef.current,
-        { opacity: 0, x: 100, rotationY: -45 },
-        {
-          opacity: 1,
-          x: 0,
-          rotationY: 0,
-          duration: 0.8,
-          ease: "back.out(1.2)",
-          scrollTrigger: {
-            trigger: visionRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+      if (visionRef.current) {
+        gsap.fromTo(visionRef.current,
+          { opacity: 0, x: 100, rotationY: -45 },
+          {
+            opacity: 1,
+            x: 0,
+            rotationY: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: visionRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Values cards with scale and rotation
-      gsap.fromTo(valueCardsRef.current,
-        { opacity: 0, scale: 0.6, rotationY: 90 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotationY: 0,
-          duration: 0.7,
-          stagger: 0.12,
-          ease: "back.out(1)",
-          scrollTrigger: {
-            trigger: valuesRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse"
+      if (valueCardsRef.current.length) {
+        gsap.fromTo(valueCardsRef.current,
+          { opacity: 0, scale: 0.6, rotationY: 90 },
+          {
+            opacity: 1,
+            scale: 1,
+            rotationY: 0,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "back.out(1)",
+            scrollTrigger: {
+              trigger: valuesRef.current,
+              start: "top 75%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Journey timeline with alternating slide animation
-      gsap.fromTo(milestoneItemsRef.current,
-        { opacity: 0, x: (i) => i % 2 === 0 ? -80 : 80, scale: 0.8 },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: journeyRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse"
+      if (milestoneItemsRef.current.length) {
+        gsap.fromTo(milestoneItemsRef.current,
+          { opacity: 0, x: (i) => i % 2 === 0 ? -80 : 80, scale: 0.8 },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: journeyRef.current,
+              start: "top 70%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // CTA section with bounce
-      gsap.fromTo(ctaRef.current,
-        { opacity: 0, y: 80, scale: 0.9 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: "bounce.out",
-          scrollTrigger: {
-            trigger: ctaRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
+      if (ctaRef.current) {
+        gsap.fromTo(ctaRef.current,
+          { opacity: 0, y: 80, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: "bounce.out",
+            scrollTrigger: {
+              trigger: ctaRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
           }
-        }
-      );
+        );
+      }
 
       // Continuous floating animation for icons
       gsap.to(".float-icon-about", {
@@ -1959,61 +1973,77 @@ const A1BuildersRealEstate = () => {
         
         const tl = gsap.timeline();
         
-        tl.fromTo(heroTitleRef.current,
-          { opacity: 0, y: 80, scale: 0.8, rotationX: -30 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotationX: 0,
-            duration: 1.2,
-            ease: "back.out(1.5)"
-          }
-        )
-        .fromTo(heroSubtitleRef.current,
-          { opacity: 0, y: 50, scale: 0.9 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: "power3.out"
-          },
-          "-=0.5"
-        )
-        .fromTo(heroButtonRef.current,
-          { opacity: 0, scale: 0.8, y: 30 },
-          {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "elastic.out(1, 0.5)"
-          },
-          "-=0.3"
-        );
+        if (heroTitleRef.current) {
+          tl.fromTo(heroTitleRef.current,
+            { opacity: 0, y: 80, scale: 0.8, rotationX: -30 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotationX: 0,
+              duration: 1.2,
+              ease: "back.out(1.5)"
+            }
+          );
+        }
+        
+        if (heroSubtitleRef.current) {
+          tl.fromTo(heroSubtitleRef.current,
+            { opacity: 0, y: 50, scale: 0.9 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power3.out"
+            },
+            "-=0.5"
+          );
+        }
+        
+        if (heroSearchRef.current) {
+          tl.fromTo(heroSearchRef.current,
+            { opacity: 0, scale: 0.8, y: 30 },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "elastic.out(1, 0.5)"
+            },
+            "-=0.3"
+          );
+        }
       }
       
       // Stats section animations - runs only once
       if (!statsAnimationsRun.current && statsCardsRef.current.length > 0) {
         statsAnimationsRun.current = true;
         
-        gsap.fromTo(statsCardsRef.current,
-          { opacity: 0, scale: 0, rotation: -180 },
-          {
-            opacity: 1,
-            scale: 1,
-            rotation: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "elastic.out(1, 0.3)",
-            scrollTrigger: {
-              trigger: statsSectionRef.current,
-              start: "top 85%",
-              toggleActions: "play none none reverse"
-            }
+        // Check if stats section is in viewport
+        const checkStats = () => {
+          if (statsSectionRef.current) {
+            gsap.fromTo(statsCardsRef.current,
+              { opacity: 0, scale: 0, rotation: -180 },
+              {
+                opacity: 1,
+                scale: 1,
+                rotation: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: "elastic.out(1, 0.3)",
+                scrollTrigger: {
+                  trigger: statsSectionRef.current,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse"
+                }
+              }
+            );
           }
-        );
+        };
+        
+        // Delay to ensure DOM is ready
+        setTimeout(checkStats, 100);
       }
       
       // Properties section fade in
@@ -2185,7 +2215,7 @@ const A1BuildersRealEstate = () => {
 
         {/* Fullscreen Hero Section with Blur Background */}
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-          {/* Background Image with Blur */}
+          {/* Background Image with Blur and Dark Overlay */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ 
@@ -2194,20 +2224,20 @@ const A1BuildersRealEstate = () => {
               transform: 'scale(1.1)'
             }}
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-black/70" />
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="max-w-4xl mx-auto">
-              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight opacity-0">
+              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
                 Find Your <span className="text-[#d4af37]">Dream Home</span><br />
                 in Bangalore
               </h2>
-              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-10 opacity-0">
+              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-10">
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
               {/* Search Bar */}
-              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl opacity-0 mb-6">
+              <div ref={heroSearchRef} className="bg-white rounded-xl shadow-xl mb-6">
                 <div className="flex flex-col md:flex-row">
                   <div className="flex-1 relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -2299,20 +2329,20 @@ const A1BuildersRealEstate = () => {
           <section ref={statsSectionRef} className="py-16 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div ref={el => statsCardsRef.current[0] = el} className="text-center opacity-0">
-                  <div className="text-3xl font-bold text-[#1a1a2e]">{properties.length}+</div>
+                <div ref={el => statsCardsRef.current[0] = el} className="text-center">
+                  <div className="text-4xl font-bold text-[#1a1a2e]">{properties.length}+</div>
                   <div className="text-sm text-gray-500 mt-2">Premium Properties</div>
                 </div>
-                <div ref={el => statsCardsRef.current[1] = el} className="text-center opacity-0">
-                  <div className="text-3xl font-bold text-[#1a1a2e]">50,000+</div>
+                <div ref={el => statsCardsRef.current[1] = el} className="text-center">
+                  <div className="text-4xl font-bold text-[#1a1a2e]">50,000+</div>
                   <div className="text-sm text-gray-500 mt-2">Happy Clients</div>
                 </div>
-                <div ref={el => statsCardsRef.current[2] = el} className="text-center opacity-0">
-                  <div className="text-3xl font-bold text-[#1a1a2e]">15+</div>
+                <div ref={el => statsCardsRef.current[2] = el} className="text-center">
+                  <div className="text-4xl font-bold text-[#1a1a2e]">15+</div>
                   <div className="text-sm text-gray-500 mt-2">Years Experience</div>
                 </div>
-                <div ref={el => statsCardsRef.current[3] = el} className="text-center opacity-0">
-                  <div className="text-3xl font-bold text-[#1a1a2e]">100%</div>
+                <div ref={el => statsCardsRef.current[3] = el} className="text-center">
+                  <div className="text-4xl font-bold text-[#1a1a2e]">100%</div>
                   <div className="text-sm text-gray-500 mt-2">Verified Properties</div>
                 </div>
               </div>
