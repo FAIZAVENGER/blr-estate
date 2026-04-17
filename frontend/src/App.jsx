@@ -17,6 +17,7 @@ import { propertyAPI, authAPI } from './services/api';
 import BrochureGenerator from './components/BrochureGenerator';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import PortfolioPage from './components/PortfolioPage';
+import anime from 'animejs';
 import './App.css';
 
 // Professional background image
@@ -375,7 +376,7 @@ const A1BuildersRealEstate = () => {
         <div className="min-h-screen bg-gray-50 py-12">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className="bg-gray-900 px-8 py-6">
+              <div className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] px-8 py-6">
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold text-white">Edit Property</h2>
                   <button
@@ -394,7 +395,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.title}
                       onChange={(e) => setEditFormData({...editFormData, title: e.target.value})}
                     />
@@ -405,7 +406,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.location}
                       onChange={(e) => setEditFormData({...editFormData, location: e.target.value})}
                     />
@@ -416,7 +417,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="number"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.price}
                       onChange={(e) => setEditFormData({...editFormData, price: parseInt(e.target.value)})}
                     />
@@ -425,7 +426,7 @@ const A1BuildersRealEstate = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
                     <select
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.type}
                       onChange={(e) => setEditFormData({...editFormData, type: e.target.value})}
                     >
@@ -444,7 +445,7 @@ const A1BuildersRealEstate = () => {
                         <input
                           type="number"
                           required
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                           value={editFormData.bedrooms}
                           onChange={(e) => setEditFormData({...editFormData, bedrooms: parseInt(e.target.value)})}
                         />
@@ -455,7 +456,7 @@ const A1BuildersRealEstate = () => {
                         <input
                           type="number"
                           required
-                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                           value={editFormData.bathrooms}
                           onChange={(e) => setEditFormData({...editFormData, bathrooms: parseInt(e.target.value)})}
                         />
@@ -468,7 +469,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="number"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.area}
                       onChange={(e) => setEditFormData({...editFormData, area: parseInt(e.target.value)})}
                     />
@@ -477,7 +478,7 @@ const A1BuildersRealEstate = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Listing Type</label>
                     <select
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={editFormData.listingType}
                       onChange={(e) => setEditFormData({...editFormData, listingType: e.target.value})}
                     >
@@ -492,7 +493,7 @@ const A1BuildersRealEstate = () => {
                   <textarea
                     required
                     rows="6"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                     value={editFormData.description}
                     onChange={(e) => setEditFormData({...editFormData, description: e.target.value})}
                   />
@@ -501,7 +502,7 @@ const A1BuildersRealEstate = () => {
                 <div className="flex gap-4 pt-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all"
+                    className="flex-1 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                   >
                     Save Changes
                   </button>
@@ -534,7 +535,7 @@ const A1BuildersRealEstate = () => {
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setCurrentPage('home')}
-                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-all group"
+                className="flex items-center gap-2 text-gray-600 hover:text-[#1a1a2e] transition-all group"
               >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
                 <span className="font-medium">Back to Properties</span>
@@ -544,7 +545,7 @@ const A1BuildersRealEstate = () => {
                   <>
                     <button 
                       onClick={() => setIsEditMode(true)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition-all"
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white hover:shadow-lg transition-all"
                     >
                       <Edit2 className="w-4 h-4" />
                       Edit
@@ -645,21 +646,21 @@ const A1BuildersRealEstate = () => {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
+                    <h1 className="text-3xl font-bold text-[#1a1a2e] mb-2">{property.title}</h1>
                     <div className="flex items-center text-gray-500">
-                      <MapPin className="w-5 h-5 mr-2 text-gray-400" />
+                      <MapPin className="w-5 h-5 mr-2 text-[#d4af37]" />
                       <span>{property.location}</span>
                     </div>
                   </div>
                   {property.featured && (
-                    <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm font-semibold">
+                    <span className="bg-[#d4af37] text-[#1a1a2e] px-3 py-1 rounded-full text-sm font-semibold">
                       Featured
                     </span>
                   )}
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-3xl font-bold text-gray-900">
+                    <div className="text-3xl font-bold text-[#1a1a2e]">
                       {formatPrice(property.price)}
                     </div>
                     {property.listingType === 'rent' && (
@@ -678,57 +679,57 @@ const A1BuildersRealEstate = () => {
                   <>
                     <div className="text-center">
                       <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Bed className="w-6 h-6 text-gray-700" />
+                        <Bed className="w-6 h-6 text-[#1a1a2e]" />
                       </div>
-                      <div className="text-xl font-bold text-gray-900">{property.bedrooms}</div>
+                      <div className="text-xl font-bold text-[#1a1a2e]">{property.bedrooms}</div>
                       <div className="text-sm text-gray-500">Bedrooms</div>
                     </div>
                     <div className="text-center">
                       <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Bath className="w-6 h-6 text-gray-700" />
+                        <Bath className="w-6 h-6 text-[#1a1a2e]" />
                       </div>
-                      <div className="text-xl font-bold text-gray-900">{property.bathrooms}</div>
+                      <div className="text-xl font-bold text-[#1a1a2e]">{property.bathrooms}</div>
                       <div className="text-sm text-gray-500">Bathrooms</div>
                     </div>
                   </>
                 ) : (
                   <div className="col-span-2 text-center">
                     <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <MapPin className="w-6 h-6 text-gray-700" />
+                      <MapPin className="w-6 h-6 text-[#1a1a2e]" />
                     </div>
-                    <div className="text-xl font-bold text-gray-900">{property.area}</div>
+                    <div className="text-xl font-bold text-[#1a1a2e]">{property.area}</div>
                     <div className="text-sm text-gray-500">Plot Size (sqft)</div>
                   </div>
                 )}
                 <div className="text-center">
                   <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Square className="w-6 h-6 text-gray-700" />
+                    <Square className="w-6 h-6 text-[#1a1a2e]" />
                   </div>
-                  <div className="text-xl font-bold text-gray-900">{property.area}</div>
+                  <div className="text-xl font-bold text-[#1a1a2e]">{property.area}</div>
                   <div className="text-sm text-gray-500">Sq Ft</div>
                 </div>
                 <div className="text-center">
                   <div className="bg-gray-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Calendar className="w-6 h-6 text-gray-700" />
+                    <Calendar className="w-6 h-6 text-[#1a1a2e]" />
                   </div>
-                  <div className="text-xl font-bold text-gray-900">2022</div>
+                  <div className="text-xl font-bold text-[#1a1a2e]">2022</div>
                   <div className="text-sm text-gray-500">Built Year</div>
                 </div>
               </div>
 
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Description</h2>
+                <h2 className="text-xl font-bold text-[#1a1a2e] mb-4">Description</h2>
                 <p className="text-gray-600 leading-relaxed">
                   {property.description || 'Beautiful property in a prime location with modern amenities and excellent connectivity. Perfect for families looking for comfort and convenience.'}
                 </p>
               </div>
 
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Amenities</h2>
+                <h2 className="text-xl font-bold text-[#1a1a2e] mb-4">Amenities</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {amenities.map((amenity, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                      <amenity.icon className="w-5 h-5 text-gray-600" />
+                      <amenity.icon className="w-5 h-5 text-[#d4af37]" />
                       <span className="text-gray-700 text-sm">{amenity.label}</span>
                     </div>
                   ))}
@@ -736,8 +737,8 @@ const A1BuildersRealEstate = () => {
               </div>
 
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <MapPinned className="w-5 h-5 text-gray-700" />
+                <h2 className="text-xl font-bold text-[#1a1a2e] mb-4 flex items-center gap-2">
+                  <MapPinned className="w-5 h-5 text-[#d4af37]" />
                   Location Map
                 </h2>
                 <div className="rounded-xl overflow-hidden h-96">
@@ -752,7 +753,7 @@ const A1BuildersRealEstate = () => {
                   ></iframe>
                 </div>
                 <p className="text-gray-600 mt-3 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-gray-500" />
+                  <MapPin className="w-4 h-4 text-[#d4af37]" />
                   {property.location}
                 </p>
               </div>
@@ -760,14 +761,14 @@ const A1BuildersRealEstate = () => {
 
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-24">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Schedule a Visit</h3>
+                <h3 className="text-xl font-bold text-[#1a1a2e] mb-4">Schedule a Visit</h3>
                 <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setSuccessMessage('✅ Visit scheduled successfully! Our team will contact you soon.'); setTimeout(() => setSuccessMessage(null), 3000); }}>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Name *</label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="Your name"
                     />
                   </div>
@@ -776,7 +777,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="tel"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="+91 "
                     />
                   </div>
@@ -785,7 +786,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="email"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -794,12 +795,12 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="date"
                       required
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all"
+                    className="w-full bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all"
                   >
                     Schedule Visit
                   </button>
@@ -939,7 +940,7 @@ const A1BuildersRealEstate = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button
               onClick={() => setCurrentPage('home')}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-all group"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#1a1a2e] transition-all group"
             >
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Back to Home</span>
@@ -949,19 +950,19 @@ const A1BuildersRealEstate = () => {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="bg-gray-900 px-8 py-6 text-center">
-              <div className="inline-block p-3 bg-gray-800 rounded-full mb-4">
-                <Upload className="w-8 h-8 text-white" />
+            <div className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] px-8 py-6 text-center">
+              <div className="inline-block p-3 bg-[#d4af37] rounded-full mb-4">
+                <Upload className="w-8 h-8 text-[#1a1a2e]" />
               </div>
               <h1 className="text-2xl font-bold text-white mb-1">List Your Property</h1>
-              <p className="text-gray-400 text-sm">Fill in the details to list your property on A1 Builders</p>
+              <p className="text-gray-300 text-sm">Fill in the details to list your property on A1 Builders</p>
             </div>
 
             <form onSubmit={handleSubmit} className="p-8 space-y-8">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Photos</h3>
+                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Property Photos</h3>
                 <p className="text-sm text-gray-500 mb-3">Upload living room, bedroom, kitchen, bathroom, and exterior photos</p>
-                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-gray-400 transition-all">
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-[#d4af37] transition-all">
                   {imagePreviews.length > 0 ? (
                     <div className="space-y-4">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -982,7 +983,7 @@ const A1BuildersRealEstate = () => {
                           </div>
                         ))}
                       </div>
-                      <label className="cursor-pointer inline-block bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all text-sm">
+                      <label className="cursor-pointer inline-block bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all text-sm">
                         <span>Add More Photos</span>
                         <input
                           type="file"
@@ -1000,7 +1001,7 @@ const A1BuildersRealEstate = () => {
                       </div>
                       <p className="text-gray-600 text-sm mb-2">Upload high-quality photos of your property</p>
                       <p className="text-xs text-gray-400 mb-4">Living Room, Bedroom, Kitchen, Bathroom, Exterior</p>
-                      <label className="cursor-pointer inline-block bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-all text-sm">
+                      <label className="cursor-pointer inline-block bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all text-sm">
                         <span>Choose Files</span>
                         <input
                           type="file"
@@ -1016,14 +1017,14 @@ const A1BuildersRealEstate = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Details</h3>
+                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Property Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Property Title *</label>
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="e.g., Luxury 3BHK Villa in Whitefield"
                       value={formData.title}
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
@@ -1035,7 +1036,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="text"
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="e.g., Whitefield, Bangalore"
                       value={formData.location}
                       onChange={(e) => setFormData({...formData, location: e.target.value})}
@@ -1047,7 +1048,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="number"
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder="e.g., 12500000"
                       value={formData.price}
                       onChange={(e) => setFormData({...formData, price: e.target.value})}
@@ -1058,7 +1059,7 @@ const A1BuildersRealEstate = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Listing Type *</label>
                     <select
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={formData.listingType}
                       onChange={(e) => setFormData({...formData, listingType: e.target.value})}
                     >
@@ -1071,7 +1072,7 @@ const A1BuildersRealEstate = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">Property Type *</label>
                     <select
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       value={formData.type}
                       onChange={(e) => setFormData({...formData, type: e.target.value})}
                     >
@@ -1091,7 +1092,7 @@ const A1BuildersRealEstate = () => {
                           type="number"
                           required
                           min="1"
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                           placeholder="e.g., 3"
                           value={formData.bedrooms}
                           onChange={(e) => setFormData({...formData, bedrooms: e.target.value})}
@@ -1104,7 +1105,7 @@ const A1BuildersRealEstate = () => {
                           type="number"
                           required
                           min="1"
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                           placeholder="e.g., 3"
                           value={formData.bathrooms}
                           onChange={(e) => setFormData({...formData, bathrooms: e.target.value})}
@@ -1118,7 +1119,7 @@ const A1BuildersRealEstate = () => {
                     <input
                       type="number"
                       required
-                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                       placeholder={formData.type === 'Plot' ? "e.g., 2400 (Plot Size)" : "e.g., 1800"}
                       value={formData.area}
                       onChange={(e) => setFormData({...formData, area: e.target.value})}
@@ -1128,7 +1129,7 @@ const A1BuildersRealEstate = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Amenities</h3>
+                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Property Amenities</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {amenities.map((amenity, index) => (
                     <label key={index} className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-all">
@@ -1140,7 +1141,7 @@ const A1BuildersRealEstate = () => {
                           newAmenities[index].selected = e.target.checked;
                           setAmenities(newAmenities);
                         }}
-                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                        className="rounded border-gray-300 text-[#d4af37] focus:ring-[#d4af37]"
                       />
                       <span className="text-sm text-gray-700">{amenity.name}</span>
                     </label>
@@ -1149,11 +1150,11 @@ const A1BuildersRealEstate = () => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Description</h3>
+                <h3 className="text-lg font-semibold text-[#1a1a2e] mb-4">Property Description</h3>
                 <textarea
                   required
                   rows="5"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                   placeholder="Describe your property in detail. Include features, amenities, nearby facilities, and unique selling points..."
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -1163,7 +1164,7 @@ const A1BuildersRealEstate = () => {
               <button
                 type="submit"
                 disabled={uploading}
-                className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {uploading ? (
                   <>
@@ -1194,6 +1195,16 @@ const A1BuildersRealEstate = () => {
       phone: ''
     });
     const [formError, setFormError] = useState('');
+
+    useEffect(() => {
+      anime({
+        targets: '.login-card',
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 800,
+        easing: 'easeOutCubic'
+      });
+    }, []);
 
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -1227,16 +1238,16 @@ const A1BuildersRealEstate = () => {
     };
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#2d2d4e] to-[#1a1a2e] flex items-center justify-center p-4 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-amber-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#d4af37]/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#d4af37]/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#d4af37]/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
           
           {[...Array(30)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-amber-400/40 rounded-full"
+              className="absolute w-1 h-1 bg-[#d4af37]/40 rounded-full"
               style={{
                 top: `${Math.random() * 100}%`,
                 left: `${Math.random() * 100}%`,
@@ -1247,15 +1258,15 @@ const A1BuildersRealEstate = () => {
           ))}
         </div>
 
-        <div className="relative z-10 w-full max-w-5xl">
+        <div className="relative z-10 w-full max-w-5xl login-card">
           <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/20">
             <div className="md:flex">
               <div className="md:w-1/2 p-8 md:p-12 bg-white">
                 <div className="text-center mb-8">
-                  <div className="inline-block p-4 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <Building2 className="w-10 h-10 text-white" />
+                  <div className="inline-block p-4 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <Building2 className="w-10 h-10 text-[#d4af37]" />
                   </div>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-bold text-[#1a1a2e] mb-2">
                     {isLogin ? 'Welcome Back!' : 'Join A1 Builders'}
                   </h2>
                   <p className="text-gray-500">
@@ -1275,11 +1286,11 @@ const A1BuildersRealEstate = () => {
                       <div className="group">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                         <div className="relative">
-                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
+                          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#d4af37] transition-colors" />
                           <input
                             type="text"
                             required
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
                             placeholder="John Doe"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
@@ -1289,11 +1300,11 @@ const A1BuildersRealEstate = () => {
                       <div className="group">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                         <div className="relative">
-                          <PhoneIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
+                          <PhoneIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#d4af37] transition-colors" />
                           <input
                             type="tel"
                             required
-                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300"
+                            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
                             placeholder="+91 98765 43210"
                             value={formData.phone}
                             onChange={(e) => setFormData({...formData, phone: e.target.value})}
@@ -1306,11 +1317,11 @@ const A1BuildersRealEstate = () => {
                   <div className="group">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                     <div className="relative">
-                      <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
+                      <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#d4af37] transition-colors" />
                       <input
                         type="email"
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
                         placeholder="you@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -1321,11 +1332,11 @@ const A1BuildersRealEstate = () => {
                   <div className="group">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <div className="relative">
-                      <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
+                      <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-[#d4af37] transition-colors" />
                       <input
                         type="password"
                         required
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all duration-300"
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-all duration-300"
                         placeholder="••••••••"
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
@@ -1335,10 +1346,10 @@ const A1BuildersRealEstate = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-gray-900 to-gray-800 text-white py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group"
+                    className="w-full bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden group"
                   >
                     <span className="relative z-10">{isLogin ? 'Sign In' : 'Create Account'}</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#2d2d4e] to-[#1a1a2e] transform translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
                   </button>
                 </form>
 
@@ -1346,7 +1357,7 @@ const A1BuildersRealEstate = () => {
                   <button
                     type="button"
                     onClick={() => setIsLogin(!isLogin)}
-                    className="text-gray-600 hover:text-gray-900 font-medium transition-all duration-300 hover:underline"
+                    className="text-gray-600 hover:text-[#d4af37] font-medium transition-all duration-300 hover:underline"
                   >
                     {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
                   </button>
@@ -1356,39 +1367,39 @@ const A1BuildersRealEstate = () => {
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <p className="text-center text-sm text-gray-500 mb-3">Demo Owner Login:</p>
                     <div className="bg-gray-50 rounded-xl p-3 text-sm">
-                      <p className="flex items-center gap-2"><MailIcon className="w-4 h-4 text-gray-400" /> Imrankhan@gmail.com</p>
-                      <p className="flex items-center gap-2 mt-1"><Key className="w-4 h-4 text-gray-400" /> ImranKhan786#</p>
+                      <p className="flex items-center gap-2"><MailIcon className="w-4 h-4 text-[#d4af37]" /> Imrankhan@gmail.com</p>
+                      <p className="flex items-center gap-2 mt-1"><Key className="w-4 h-4 text-[#d4af37]" /> ImranKhan786#</p>
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="md:w-1/2 bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-12 flex flex-col justify-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full -mr-32 -mt-32"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/10 rounded-full -ml-32 -mb-32"></div>
+              <div className="md:w-1/2 bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] p-8 md:p-12 flex flex-col justify-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -mr-32 -mt-32"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -ml-32 -mb-32"></div>
                 
                 <div className="relative z-10 text-center text-white">
                   <div className="mb-6">
                     <div className="w-20 h-20 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 transform rotate-12">
-                      <Crown className="w-10 h-10 text-amber-400" />
+                      <Crown className="w-10 h-10 text-[#d4af37]" />
                     </div>
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Why Join A1 Builders?</h3>
                   <ul className="space-y-4 text-left">
                     <li className="flex items-center transform hover:translate-x-2 transition-transform duration-300">
-                      <CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[#d4af37] mr-3 flex-shrink-0" />
                       <span>Access exclusive property listings</span>
                     </li>
                     <li className="flex items-center transform hover:translate-x-2 transition-transform duration-300">
-                      <CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[#d4af37] mr-3 flex-shrink-0" />
                       <span>Save favorite properties</span>
                     </li>
                     <li className="flex items-center transform hover:translate-x-2 transition-transform duration-300">
-                      <CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[#d4af37] mr-3 flex-shrink-0" />
                       <span>Get personalized recommendations</span>
                     </li>
                     <li className="flex items-center transform hover:translate-x-2 transition-transform duration-300">
-                      <CheckCircle className="w-5 h-5 text-amber-400 mr-3 flex-shrink-0" />
+                      <CheckCircle className="w-5 h-5 text-[#d4af37] mr-3 flex-shrink-0" />
                       <span>Direct contact with builders</span>
                     </li>
                   </ul>
@@ -1396,15 +1407,15 @@ const A1BuildersRealEstate = () => {
                   <div className="mt-8 pt-6 border-t border-white/10">
                     <div className="flex justify-center gap-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-amber-400">15+</div>
+                        <div className="text-2xl font-bold text-[#d4af37]">15+</div>
                         <div className="text-xs text-gray-400">Years</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-amber-400">50K+</div>
+                        <div className="text-2xl font-bold text-[#d4af37]">50K+</div>
                         <div className="text-xs text-gray-400">Clients</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-amber-400">100%</div>
+                        <div className="text-2xl font-bold text-[#d4af37]">100%</div>
                         <div className="text-xs text-gray-400">Verified</div>
                       </div>
                     </div>
@@ -1418,7 +1429,7 @@ const A1BuildersRealEstate = () => {
     );
   };
 
-  // About Page
+  // About Page with anime.js animations
   const AboutPage = () => {
     const stats = [
       { icon: Home, value: properties.length || 0, label: 'Premium Properties', suffix: '+' },
@@ -1443,6 +1454,64 @@ const A1BuildersRealEstate = () => {
       { year: '2024', title: 'The Future', desc: 'Continuing to innovate and provide the best real estate experience.', icon: Sparkles }
     ];
 
+    useEffect(() => {
+      // Stagger animations for stats
+      anime({
+        targets: '.stat-card',
+        translateY: [30, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(100),
+        duration: 800,
+        easing: 'easeOutCubic'
+      });
+      
+      // Float animation for icons
+      anime({
+        targets: '.float-icon',
+        translateY: [-5, 5],
+        direction: 'alternate',
+        loop: true,
+        duration: 2000,
+        easing: 'easeInOutSine'
+      });
+      
+      // Timeline animation for milestones
+      const timeline = anime.timeline({
+        easing: 'easeOutCubic',
+        duration: 800
+      });
+      
+      timeline.add({
+        targets: '.milestone-item',
+        translateX: [50, 0],
+        opacity: [0, 1],
+        delay: anime.stagger(150)
+      });
+      
+      // Scroll reveal animation
+      const revealElements = document.querySelectorAll('.reveal-on-scroll');
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            anime({
+              targets: entry.target,
+              translateY: [30, 0],
+              opacity: [0, 1],
+              duration: 800,
+              easing: 'easeOutCubic'
+            });
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      revealElements.forEach(el => revealObserver.observe(el));
+      
+      return () => {
+        revealElements.forEach(el => revealObserver.unobserve(el));
+      };
+    }, []);
+
     const teamMembers = [
       { name: 'Imran Khan', role: 'Founder & CEO', image: 'https://randomuser.me/api/portraits/men/1.jpg', bio: '15+ years in real estate industry', whatsapp: '919738634402' },
       { name: 'Priya Sharma', role: 'Head of Sales', image: 'https://randomuser.me/api/portraits/women/2.jpg', bio: 'Expert in luxury properties', whatsapp: '919738634402' },
@@ -1458,11 +1527,11 @@ const A1BuildersRealEstate = () => {
 
     return (
       <div className="min-h-screen bg-white">
-        <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <button
               onClick={() => setCurrentPage('home')}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-all group"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#1a1a2e] transition-all group"
             >
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="font-medium">Back to Home</span>
@@ -1472,11 +1541,11 @@ const A1BuildersRealEstate = () => {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center mb-20 animate-fadeInUp">
-            <div className="inline-block p-4 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
-              <Building2 className="w-12 h-12 text-white" />
+            <div className="inline-block p-4 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl mb-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+              <Building2 className="w-12 h-12 text-[#d4af37]" />
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              About <span className="bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">A1 Builders</span>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1a1a2e] mb-6">
+              About <span className="bg-gradient-to-r from-[#1a1a2e] to-[#d4af37] bg-clip-text text-transparent">A1 Builders</span>
             </h1>
             <p className="text-xl text-gray-500 max-w-3xl mx-auto leading-relaxed">
               Bangalore's premier real estate platform connecting dreams with reality through technology, 
@@ -1484,13 +1553,13 @@ const A1BuildersRealEstate = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20 stagger-children">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
             {stats.map((stat, index) => (
-              <div key={index} className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
-                <div className="bg-gradient-to-r from-gray-900 to-gray-700 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <stat.icon className="w-8 h-8 text-white" />
+              <div key={index} className="stat-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                <div className="float-icon bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <stat.icon className="w-8 h-8 text-[#d4af37]" />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900">
+                <h3 className="text-3xl font-bold text-[#1a1a2e]">
                   {stat.value}{stat.suffix}
                 </h3>
                 <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
@@ -1499,11 +1568,11 @@ const A1BuildersRealEstate = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative animate-fadeInLeft">
+            <div className="reveal-on-scroll bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16"></div>
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                  <Target className="w-7 h-7" />
+                  <Target className="w-7 h-7 text-[#d4af37]" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Our Mission</h3>
                 <p className="text-gray-300 leading-relaxed">
@@ -1512,11 +1581,11 @@ const A1BuildersRealEstate = () => {
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden relative animate-fadeInRight">
+            <div className="reveal-on-scroll bg-gradient-to-br from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-8 text-white transform hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full -ml-16 -mb-16"></div>
               <div className="relative z-10">
                 <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                  <Globe className="w-7 h-7" />
+                  <Globe className="w-7 h-7 text-[#d4af37]" />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Our Vision</h3>
                 <p className="text-gray-300 leading-relaxed">
@@ -1529,16 +1598,16 @@ const A1BuildersRealEstate = () => {
 
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Core Values</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Core Values</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">The principles that guide everything we do</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {values.map((value, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-scaleIn" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
                   <div className={`w-14 h-14 bg-gradient-to-r ${value.color} rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                     <value.icon className="w-7 h-7 text-white" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{value.title}</h3>
+                  <h3 className="text-lg font-bold text-[#1a1a2e] mb-2">{value.title}</h3>
                   <p className="text-gray-500 text-sm leading-relaxed">{value.desc}</p>
                 </div>
               ))}
@@ -1547,29 +1616,29 @@ const A1BuildersRealEstate = () => {
 
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Our Journey</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">15+ years of excellence in real estate</p>
             </div>
             <div className="relative">
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-gray-900 to-gray-400 hidden md:block"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gradient-to-b from-[#1a1a2e] to-[#d4af37] hidden md:block"></div>
               <div className="space-y-8">
                 {milestones.map((milestone, index) => (
-                  <div key={index} className={`flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} animate-fadeInUp`} style={{ animationDelay: `${index * 0.1}s` }}>
+                  <div key={index} className={`milestone-item flex flex-col md:flex-row items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                     <div className="md:w-1/2 p-4">
                       <div className={`bg-white rounded-xl p-6 shadow-lg border border-gray-100 ${index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'} transform hover:-translate-y-1 transition-all duration-300`}>
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-12 h-12 bg-gradient-to-r from-gray-900 to-gray-700 rounded-xl flex items-center justify-center shadow-md">
-                            <milestone.icon className="w-6 h-6 text-white" />
+                          <div className="w-12 h-12 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-xl flex items-center justify-center shadow-md">
+                            <milestone.icon className="w-6 h-6 text-[#d4af37]" />
                           </div>
                           <div>
-                            <span className="text-sm font-bold text-amber-600">{milestone.year}</span>
-                            <h3 className="text-xl font-bold text-gray-900">{milestone.title}</h3>
+                            <span className="text-sm font-bold text-[#d4af37]">{milestone.year}</span>
+                            <h3 className="text-xl font-bold text-[#1a1a2e]">{milestone.title}</h3>
                           </div>
                         </div>
                         <p className="text-gray-500 leading-relaxed">{milestone.desc}</p>
                       </div>
                     </div>
-                    <div className="hidden md:block w-8 h-8 bg-gradient-to-r from-gray-900 to-gray-700 rounded-full border-4 border-white shadow-md z-10"></div>
+                    <div className="hidden md:block w-8 h-8 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-full border-4 border-white shadow-md z-10"></div>
                     <div className="md:w-1/2"></div>
                   </div>
                 ))}
@@ -1579,17 +1648,17 @@ const A1BuildersRealEstate = () => {
 
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet Our Leadership</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">Meet Our Leadership</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">The passionate team behind A1 Builders</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamMembers.map((member, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-scaleIn" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 text-center shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
                   <div className="relative">
-                    <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200 hover:border-amber-400 transition-all duration-300" />
+                    <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-gray-200 hover:border-[#d4af37] transition-all duration-300" />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
-                  <p className="text-amber-600 text-sm font-medium mb-2">{member.role}</p>
+                  <h3 className="text-lg font-bold text-[#1a1a2e]">{member.name}</h3>
+                  <p className="text-[#d4af37] text-sm font-medium mb-2">{member.role}</p>
                   <p className="text-gray-500 text-xs">{member.bio}</p>
                   <button
                     onClick={() => window.open(`https://wa.me/${member.whatsapp}?text=${encodeURIComponent("Hello! I'm interested in your services at A1 Builders.")}`, '_blank')}
@@ -1605,23 +1674,23 @@ const A1BuildersRealEstate = () => {
 
           <div className="mb-20">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a2e] mb-4">What Our Clients Say</h2>
               <p className="text-gray-500 max-w-2xl mx-auto">Real stories from our happy customers</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300 animate-fadeInUp" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <Quote className="w-8 h-8 text-amber-400 mb-4 opacity-50" />
+                <div key={index} className="reveal-on-scroll bg-white rounded-xl p-6 shadow-lg border border-gray-100 transform hover:-translate-y-2 transition-all duration-300">
+                  <Quote className="w-8 h-8 text-[#d4af37] mb-4 opacity-50" />
                   <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.content}"</p>
                   <div className="flex items-center gap-3">
                     <img src={testimonial.image} alt={testimonial.name} className="w-10 h-10 rounded-full object-cover" />
                     <div>
-                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                      <h4 className="font-semibold text-[#1a1a2e]">{testimonial.name}</h4>
                       <p className="text-xs text-gray-500">{testimonial.role}</p>
                     </div>
                     <div className="flex ml-auto gap-0.5">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                        <Star key={i} className="w-3 h-3 fill-[#d4af37] text-[#d4af37]" />
                       ))}
                     </div>
                   </div>
@@ -1630,11 +1699,11 @@ const A1BuildersRealEstate = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
+          <div className="reveal-on-scroll bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] rounded-2xl p-12 text-center transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -mr-32 -mt-32"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#d4af37]/10 rounded-full -ml-32 -mb-32"></div>
             <div className="relative z-10">
-              <Crown className="w-16 h-16 text-amber-400 mx-auto mb-4 animate-float" />
+              <Crown className="w-16 h-16 text-[#d4af37] mx-auto mb-4 animate-float" />
               <h2 className="text-3xl font-bold text-white mb-4">Ready to Find Your Dream Home?</h2>
               <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
                 Join thousands of happy homeowners who found their perfect property with A1 Builders
@@ -1642,7 +1711,7 @@ const A1BuildersRealEstate = () => {
               <div className="flex flex-wrap gap-4 justify-center">
                 <button
                   onClick={() => setCurrentPage('home')}
-                  className="bg-white text-gray-900 px-8 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                  className="bg-white text-[#1a1a2e] px-8 py-3 rounded-xl font-semibold hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
                 >
                   Browse Properties
                 </button>
@@ -1663,20 +1732,48 @@ const A1BuildersRealEstate = () => {
 
   // Home Page
   const HomePage = () => {
+    useEffect(() => {
+      anime({
+        targets: '.hero-title',
+        opacity: [0, 1],
+        translateY: [30, 0],
+        duration: 1000,
+        easing: 'easeOutCubic'
+      });
+      
+      anime({
+        targets: '.hero-subtitle',
+        opacity: [0, 1],
+        translateY: [20, 0],
+        delay: 300,
+        duration: 800,
+        easing: 'easeOutCubic'
+      });
+      
+      anime({
+        targets: '.hero-button',
+        opacity: [0, 1],
+        scale: [0.9, 1],
+        delay: 600,
+        duration: 600,
+        easing: 'easeOutElastic(1, .5)'
+      });
+    }, []);
+
     return (
       <div className="min-h-screen bg-white">
-        <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div 
                 className="flex items-center space-x-3 cursor-pointer group"
                 onClick={() => setCurrentPage('home')}
               >
-                <div className="bg-gray-900 p-2 rounded-lg transform group-hover:scale-105 transition-transform">
-                  <Building2 className="text-white w-5 h-5" />
+                <div className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] p-2 rounded-lg transform group-hover:scale-105 transition-transform">
+                  <Building2 className="text-[#d4af37] w-5 h-5" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">A1 Builders</h1>
+                  <h1 className="text-xl font-bold text-[#1a1a2e]">A1 Builders</h1>
                   <p className="text-xs text-gray-500">Premium Properties</p>
                 </div>
               </div>
@@ -1686,8 +1783,8 @@ const A1BuildersRealEstate = () => {
                   onClick={() => setActiveTab('buy')} 
                   className={`transition-all text-sm font-medium ${
                     activeTab === 'buy' 
-                      ? 'text-gray-900 border-b-2 border-gray-900' 
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-[#1a1a2e] border-b-2 border-[#d4af37]' 
+                      : 'text-gray-600 hover:text-[#1a1a2e]'
                   }`}
                 >
                   Buy
@@ -1696,22 +1793,22 @@ const A1BuildersRealEstate = () => {
                   onClick={() => setActiveTab('rent')} 
                   className={`transition-all text-sm font-medium ${
                     activeTab === 'rent' 
-                      ? 'text-gray-900 border-b-2 border-gray-900' 
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-[#1a1a2e] border-b-2 border-[#d4af37]' 
+                      : 'text-gray-600 hover:text-[#1a1a2e]'
                   }`}
                 >
                   Rent
                 </button>
                 <button 
                   onClick={() => setCurrentPage('portfolio')}
-                  className="text-gray-600 hover:text-gray-900 transition-all text-sm font-medium flex items-center gap-1"
+                  className="text-gray-600 hover:text-[#1a1a2e] transition-all text-sm font-medium flex items-center gap-1"
                 >
                   <BriefcaseIcon className="w-4 h-4" />
                   Portfolio
                 </button>
                 <button 
                   onClick={() => setCurrentPage('about')} 
-                  className="text-gray-600 hover:text-gray-900 transition-all text-sm font-medium"
+                  className="text-gray-600 hover:text-[#1a1a2e] transition-all text-sm font-medium"
                 >
                   About
                 </button>
@@ -1721,7 +1818,7 @@ const A1BuildersRealEstate = () => {
                     {userRole === 'owner' && (
                       <button 
                         onClick={() => setCurrentPage('sell')} 
-                        className="text-gray-600 hover:text-gray-900 transition-all text-sm font-medium"
+                        className="text-gray-600 hover:text-[#1a1a2e] transition-all text-sm font-medium"
                       >
                         Sell Property
                       </button>
@@ -1729,7 +1826,7 @@ const A1BuildersRealEstate = () => {
                     <span className="text-gray-700 text-sm">Hi, {userName}</span>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 bg-gray-900 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-gray-800 transition-all"
+                      className="flex items-center gap-2 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-1.5 rounded-lg text-sm hover:shadow-lg transition-all"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       Logout
@@ -1738,7 +1835,7 @@ const A1BuildersRealEstate = () => {
                 ) : (
                   <button
                     onClick={() => setCurrentPage('login')}
-                    className="bg-gray-900 text-white px-5 py-1.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition-all"
+                    className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-5 py-1.5 rounded-lg text-sm font-medium hover:shadow-lg transition-all"
                   >
                     Login / Sign Up
                   </button>
@@ -1757,22 +1854,22 @@ const A1BuildersRealEstate = () => {
           {mobileMenu && (
             <div className="md:hidden bg-white border-t border-gray-100">
               <nav className="flex flex-col space-y-3 px-4 py-5">
-                <button onClick={() => { setActiveTab('buy'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                <button onClick={() => { setActiveTab('buy'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                   Buy
                 </button>
-                <button onClick={() => { setActiveTab('rent'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                <button onClick={() => { setActiveTab('rent'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                   Rent
                 </button>
-                <button onClick={() => { setCurrentPage('portfolio'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                <button onClick={() => { setCurrentPage('portfolio'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                   Portfolio
                 </button>
-                <button onClick={() => { setCurrentPage('about'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                <button onClick={() => { setCurrentPage('about'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                   About
                 </button>
                 {isLoggedIn ? (
                   <>
                     {userRole === 'owner' && (
-                      <button onClick={() => { setCurrentPage('sell'); setMobileMenu(false); }} className="text-gray-600 hover:text-gray-900 text-left py-1">
+                      <button onClick={() => { setCurrentPage('sell'); setMobileMenu(false); }} className="text-gray-600 hover:text-[#1a1a2e] text-left py-1">
                         Sell Property
                       </button>
                     )}
@@ -1782,7 +1879,7 @@ const A1BuildersRealEstate = () => {
                         handleLogout();
                         setMobileMenu(false);
                       }}
-                      className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-left text-sm"
+                      className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-1.5 rounded-lg text-left text-sm"
                     >
                       Logout
                     </button>
@@ -1793,7 +1890,7 @@ const A1BuildersRealEstate = () => {
                       setCurrentPage('login');
                       setMobileMenu(false);
                     }}
-                    className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-left text-sm"
+                    className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-4 py-1.5 rounded-lg text-left text-sm"
                   >
                     Login / Sign Up
                   </button>
@@ -1815,16 +1912,16 @@ const A1BuildersRealEstate = () => {
           <div className="absolute inset-0 bg-black/50" />
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
-            <div className="max-w-3xl animate-fadeInUp">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                Find Your <span className="text-amber-400">Dream Home</span><br />
+            <div className="max-w-3xl">
+              <h2 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                Find Your <span className="text-[#d4af37]">Dream Home</span><br />
                 in Bangalore
               </h2>
-              <p className="text-lg md:text-xl text-gray-200 mb-8">
+              <p className="hero-subtitle text-lg md:text-xl text-gray-200 mb-8">
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
-              <div className="bg-white rounded-xl shadow-xl">
+              <div className="hero-button bg-white rounded-xl shadow-xl">
                 <div className="flex flex-col md:flex-row">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -1851,7 +1948,7 @@ const A1BuildersRealEstate = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Price Range</label>
                       <select 
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={priceRange}
                         onChange={(e) => setPriceRange(e.target.value)}
                       >
@@ -1866,7 +1963,7 @@ const A1BuildersRealEstate = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Property Type</label>
                       <select 
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={propertyType}
                         onChange={(e) => setPropertyType(e.target.value)}
                       >
@@ -1882,7 +1979,7 @@ const A1BuildersRealEstate = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Bedrooms</label>
                       <select 
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                        className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
                         value={bedrooms}
                         onChange={(e) => setBedrooms(e.target.value)}
                       >
@@ -1904,19 +2001,19 @@ const A1BuildersRealEstate = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center animate-fadeInUp">
-                <div className="text-2xl font-bold text-gray-900">{properties.length}+</div>
+                <div className="text-2xl font-bold text-[#1a1a2e]">{properties.length}+</div>
                 <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
               </div>
               <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                <div className="text-2xl font-bold text-gray-900">50,000+</div>
+                <div className="text-2xl font-bold text-[#1a1a2e]">50,000+</div>
                 <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
               </div>
               <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <div className="text-2xl font-bold text-gray-900">15+</div>
+                <div className="text-2xl font-bold text-[#1a1a2e]">15+</div>
                 <div className="text-sm text-gray-500 mt-1">Years Experience</div>
               </div>
               <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-                <div className="text-2xl font-bold text-gray-900">100%</div>
+                <div className="text-2xl font-bold text-[#1a1a2e]">100%</div>
                 <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
               </div>
             </div>
@@ -1927,7 +2024,7 @@ const A1BuildersRealEstate = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">
+                <h3 className="text-2xl font-bold text-[#1a1a2e]">
                   {activeTab === 'buy' ? 'Properties for Sale' : 'Properties for Rent'}
                 </h3>
                 <p className="text-gray-500 text-sm mt-1">
@@ -1945,7 +2042,7 @@ const A1BuildersRealEstate = () => {
 
             {loading ? (
               <div className="text-center py-20">
-                <div className="inline-block animate-spin rounded-full h-10 w-10 border-2 border-gray-300 border-t-gray-900"></div>
+                <div className="inline-block animate-spin rounded-full h-10 w-10 border-2 border-gray-300 border-t-[#d4af37]"></div>
                 <p className="mt-4 text-gray-500">Loading properties...</p>
               </div>
             ) : filteredProperties.length === 0 ? (
@@ -1956,7 +2053,7 @@ const A1BuildersRealEstate = () => {
                   <p className="text-gray-500 text-sm mb-4">Try adjusting your filters</p>
                   <button 
                     onClick={clearFilters}
-                    className="bg-gray-900 text-white px-5 py-2 rounded-lg text-sm hover:bg-gray-800 transition-all"
+                    className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white px-5 py-2 rounded-lg text-sm hover:shadow-lg transition-all"
                   >
                     Clear All Filters
                   </button>
@@ -1967,7 +2064,7 @@ const A1BuildersRealEstate = () => {
                 {filteredProperties.map((property, index) => (
                   <div 
                     key={property._id} 
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group property-card animate-fadeInUp"
+                    className="property-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group"
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
                     <div className="relative overflow-hidden bg-gray-100 h-56">
@@ -1981,7 +2078,7 @@ const A1BuildersRealEstate = () => {
                       />
                       
                       {property.featured && (
-                        <div className="absolute top-3 left-3 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                        <div className="absolute top-3 left-3 bg-[#d4af37] text-[#1a1a2e] px-2 py-0.5 rounded-full text-xs font-semibold">
                           Featured
                         </div>
                       )}
@@ -2041,17 +2138,17 @@ const A1BuildersRealEstate = () => {
                       </button>
                       
                       <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
-                        <span className="text-sm font-bold text-gray-900">{formatPrice(property.price)}</span>
+                        <span className="text-sm font-bold text-[#1a1a2e]">{formatPrice(property.price)}</span>
                         {property.listingType === 'rent' && <span className="text-xs text-gray-500">/mo</span>}
                       </div>
                     </div>
 
                     <div className="p-4">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">
+                      <h4 className="text-lg font-semibold text-[#1a1a2e] mb-1 line-clamp-1">
                         {property.title}
                       </h4>
                       <div className="flex items-center text-gray-500 text-sm mb-3">
-                        <MapPin className="w-3.5 h-3.5 mr-1 text-gray-400" />
+                        <MapPin className="w-3.5 h-3.5 mr-1 text-[#d4af37]" />
                         <span className="text-xs">{property.location}</span>
                       </div>
 
@@ -2081,7 +2178,7 @@ const A1BuildersRealEstate = () => {
 
                       <button 
                         onClick={() => viewPropertyDetails(property)}
-                        className="w-full mt-4 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition-all text-sm font-medium"
+                        className="w-full mt-4 bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-2 rounded-lg hover:shadow-lg transition-all text-sm font-medium"
                       >
                         View Details
                       </button>
@@ -2093,13 +2190,13 @@ const A1BuildersRealEstate = () => {
           </div>
         </section>
 
-        <footer className="bg-gray-900 text-white py-12">
+        <footer className="bg-gradient-to-r from-[#1a1a2e] to-[#2d2d4e] text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="bg-amber-500 p-2 rounded-lg">
-                    <Building2 className="text-gray-900 w-6 h-6" />
+                  <div className="bg-[#d4af37] p-2 rounded-lg">
+                    <Building2 className="text-[#1a1a2e] w-6 h-6" />
                   </div>
                   <span className="text-xl font-bold text-white">A1 Builders</span>
                 </div>
@@ -2108,16 +2205,16 @@ const A1BuildersRealEstate = () => {
                   Making dream homes a reality since 2010.
                 </p>
                 <div className="flex gap-4">
-                  <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-gray-900 transition-all duration-300">
+                  <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#d4af37] hover:text-[#1a1a2e] transition-all duration-300">
                     <Facebook className="w-4 h-4" />
                   </a>
-                  <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-gray-900 transition-all duration-300">
+                  <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#d4af37] hover:text-[#1a1a2e] transition-all duration-300">
                     <Twitter className="w-4 h-4" />
                   </a>
-                  <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-gray-900 transition-all duration-300">
+                  <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#d4af37] hover:text-[#1a1a2e] transition-all duration-300">
                     <Instagram className="w-4 h-4" />
                   </a>
-                  <a href="#" className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-gray-900 transition-all duration-300">
+                  <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#d4af37] hover:text-[#1a1a2e] transition-all duration-300">
                     <Linkedin className="w-4 h-4" />
                   </a>
                 </div>
@@ -2126,14 +2223,14 @@ const A1BuildersRealEstate = () => {
               <div>
                 <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
                 <ul className="space-y-3 text-sm">
-                  <li><button onClick={() => setCurrentPage('home')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Browse Properties</button></li>
-                  <li><button onClick={() => setCurrentPage('portfolio')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Agent Portfolio</button></li>
-                  <li><button onClick={() => setCurrentPage('about')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> About Us</button></li>
+                  <li><button onClick={() => setCurrentPage('home')} className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Browse Properties</button></li>
+                  <li><button onClick={() => setCurrentPage('portfolio')} className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Agent Portfolio</button></li>
+                  <li><button onClick={() => setCurrentPage('about')} className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> About Us</button></li>
                   {userRole === 'owner' && (
-                    <li><button onClick={() => setCurrentPage('sell')} className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> List Property</button></li>
+                    <li><button onClick={() => setCurrentPage('sell')} className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> List Property</button></li>
                   )}
-                  <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Privacy Policy</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Terms of Service</a></li>
+                  <li><a href="#" className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Privacy Policy</a></li>
+                  <li><a href="#" className="text-gray-400 hover:text-[#d4af37] transition-colors duration-300 flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Terms of Service</a></li>
                 </ul>
               </div>
 
@@ -2141,19 +2238,19 @@ const A1BuildersRealEstate = () => {
                 <h4 className="text-white font-semibold mb-4 text-lg">Contact Info</h4>
                 <ul className="space-y-3 text-sm text-gray-400">
                   <li className="flex items-start gap-3">
-                    <MapPinIcon className="w-4 h-4 mt-0.5 text-amber-500" />
+                    <MapPinIcon className="w-4 h-4 mt-0.5 text-[#d4af37]" />
                     <span>Bangalore, Karnataka, India - 560001</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <PhoneIcon className="w-4 h-4 text-amber-500" />
+                    <PhoneIcon className="w-4 h-4 text-[#d4af37]" />
                     <span>+91 97386 34402</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <MailIcon className="w-4 h-4 text-amber-500" />
+                    <MailIcon className="w-4 h-4 text-[#d4af37]" />
                     <span>info@a1builders.com</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Globe className="w-4 h-4 text-amber-500" />
+                    <Globe className="w-4 h-4 text-[#d4af37]" />
                     <span>www.a1builders.com</span>
                   </li>
                 </ul>
@@ -2163,21 +2260,21 @@ const A1BuildersRealEstate = () => {
                 <h4 className="text-white font-semibold mb-4 text-lg">Business Hours</h4>
                 <ul className="space-y-3 text-sm text-gray-400">
                   <li className="flex items-center gap-3">
-                    <ClockIcon className="w-4 h-4 text-amber-500" />
+                    <ClockIcon className="w-4 h-4 text-[#d4af37]" />
                     <div>
                       <div>Monday - Friday: 9AM - 8PM</div>
                       <div className="text-xs text-gray-500">(All days open)</div>
                     </div>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CalendarIcon className="w-4 h-4 text-amber-500" />
+                    <CalendarIcon className="w-4 h-4 text-[#d4af37]" />
                     <div>
                       <div>Saturday: 10AM - 6PM</div>
                       <div className="text-xs text-gray-500">(Limited support)</div>
                     </div>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Coffee className="w-4 h-4 text-amber-500" />
+                    <Coffee className="w-4 h-4 text-[#d4af37]" />
                     <div>
                       <div>Sunday: By Appointment</div>
                       <div className="text-xs text-gray-500">(Prior booking required)</div>
@@ -2187,7 +2284,7 @@ const A1BuildersRealEstate = () => {
               </div>
             </div>
 
-            <div className="border-t border-gray-800 mt-8 pt-8">
+            <div className="border-t border-white/10 mt-8 pt-8">
               <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                 <p className="text-gray-400 text-sm">
                   &copy; 2024 A1 Builders. All rights reserved. | Built with ❤️ in Bangalore
@@ -2196,9 +2293,9 @@ const A1BuildersRealEstate = () => {
                   <input
                     type="email"
                     placeholder="Subscribe to newsletter"
-                    className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500"
+                    className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm placeholder-gray-400 focus:outline-none focus:border-[#d4af37]"
                   />
-                  <button className="bg-amber-500 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-amber-400 transition-all duration-300">
+                  <button className="bg-[#d4af37] text-[#1a1a2e] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#ffd700] transition-all duration-300">
                     Subscribe
                   </button>
                 </div>
