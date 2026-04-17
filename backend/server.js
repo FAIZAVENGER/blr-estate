@@ -56,6 +56,7 @@ mongoose.connection.on("disconnected", () => {
 /* ================= ROUTES ================= */
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/properties", require("./routes/properties"));
+app.use("/api/portfolio", require("./routes/portfolio"));
 
 /* ================= HEALTH CHECK ================= */
 app.get("/", (req, res) => {
@@ -191,6 +192,32 @@ const seedProperties = [
     featured: false,
     listingType: "rent",
   },
+  {
+    title: "Prime Residential Plot in Whitefield",
+    location: "Whitefield, Bangalore",
+    description: "Prime residential plot in a gated community, perfect for building your dream home",
+    price: 45000000,
+    type: "Plot",
+    bedrooms: 0,
+    bathrooms: 0,
+    area: 4800,
+    image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80",
+    featured: true,
+    listingType: "buy",
+  },
+  {
+    title: "Commercial Plot in Electronic City",
+    location: "Electronic City, Bangalore",
+    description: "Commercial plot ideal for building offices or retail space, excellent location",
+    price: 65000000,
+    type: "Plot",
+    bedrooms: 0,
+    bathrooms: 0,
+    area: 7200,
+    image: "https://images.unsplash.com/photo-1448630360428-65456885c650?w=800&q=80",
+    featured: false,
+    listingType: "buy",
+  },
 ];
 
 app.get("/api/seed", async (req, res) => {
@@ -250,6 +277,7 @@ if (process.env.NODE_ENV !== "production" || process.env.VERCEL !== "1") {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📍 Health check: http://localhost:${PORT}/api/health`);
     console.log(`📍 Properties API: http://localhost:${PORT}/api/properties`);
+    console.log(`📍 Portfolio API: http://localhost:${PORT}/api/portfolio`);
     console.log(`📍 Seed endpoint: http://localhost:${PORT}/api/seed`);
   });
 }
