@@ -74,6 +74,16 @@ const A1BuildersRealEstate = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  // Refs for Home Page GSAP Animations
+  const heroTitleRef = useRef(null);
+  const heroSubtitleRef = useRef(null);
+  const heroButtonRef = useRef(null);
+  const statsSectionRef = useRef(null);
+  const statsCardsRef = useRef([]);
+  const propertiesSectionRef = useRef(null);
+  const heroAnimationsRun = useRef(false);
+  const statsAnimationsRun = useRef(false);
+
   // Check backend status
   useEffect(() => {
     const checkBackend = async () => {
@@ -1931,24 +1941,89 @@ const A1BuildersRealEstate = () => {
 
   // Home Page
   const HomePage = () => {
-    const heroTitleRef = useRef(null);
-    const heroSubtitleRef = useRef(null);
-    const heroButtonRef = useRef(null);
-
+    // Run GSAP animations only once when component mounts
     useEffect(() => {
-      gsap.fromTo(heroTitleRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
-      );
-      gsap.fromTo(heroSubtitleRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, delay: 0.3, ease: "power3.out" }
-      );
-      gsap.fromTo(heroButtonRef.current,
-        { opacity: 0, scale: 0.9 },
-        { opacity: 1, scale: 1, duration: 0.6, delay: 0.6, ease: "back.out(1.2)" }
-      );
-    }, []);
+      // Hero section animations - runs only once
+      if (!heroAnimationsRun.current) {
+        heroAnimationsRun.current = true;
+        
+        const tl = gsap.timeline();
+        
+        tl.fromTo(heroTitleRef.current,
+          { opacity: 0, y: 80, scale: 0.8, rotationX: -30 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            duration: 1.2,
+            ease: "back.out(1.5)"
+          }
+        )
+        .fromTo(heroSubtitleRef.current,
+          { opacity: 0, y: 50, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: "power3.out"
+          },
+          "-=0.5"
+        )
+        .fromTo(heroButtonRef.current,
+          { opacity: 0, scale: 0.8, y: 30 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "elastic.out(1, 0.5)"
+          },
+          "-=0.3"
+        );
+      }
+      
+      // Stats section animations - runs only once
+      if (!statsAnimationsRun.current && statsCardsRef.current.length > 0) {
+        statsAnimationsRun.current = true;
+        
+        gsap.fromTo(statsCardsRef.current,
+          { opacity: 0, scale: 0, rotation: -180 },
+          {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "elastic.out(1, 0.3)",
+            scrollTrigger: {
+              trigger: statsSectionRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+      
+      // Properties section fade in
+      if (propertiesSectionRef.current && !loading) {
+        gsap.fromTo(propertiesSectionRef.current,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: propertiesSectionRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse"
+            }
+          }
+        );
+      }
+    }, [loading]);
 
     return (
       <div className="min-h-screen bg-white">
@@ -2110,15 +2185,15 @@ const A1BuildersRealEstate = () => {
           
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
             <div className="max-w-3xl">
-              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+              <h2 ref={heroTitleRef} className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight opacity-0">
                 Find Your <span className="text-[#d4af37]">Dream Home</span><br />
                 in Bangalore
               </h2>
-              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-8">
+              <p ref={heroSubtitleRef} className="text-lg md:text-xl text-gray-200 mb-8 opacity-0">
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
-              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl">
+              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl opacity-0">
                 <div className="flex flex-col md:flex-row">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
@@ -2195,30 +2270,32 @@ const A1BuildersRealEstate = () => {
         </section>
 
         {/* Stats Section - Fixed to load only once */}
-        <section className="py-12 bg-gradient-to-r from-gray-50 to-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="text-center animate-fadeInUp">
-                <div className="text-2xl font-bold text-[#1a1a2e]">{properties.length}+</div>
-                <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
-              </div>
-              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                <div className="text-2xl font-bold text-[#1a1a2e]">50,000+</div>
-                <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
-              </div>
-              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <div className="text-2xl font-bold text-[#1a1a2e]">15+</div>
-                <div className="text-sm text-gray-500 mt-1">Years Experience</div>
-              </div>
-              <div className="text-center animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-                <div className="text-2xl font-bold text-[#1a1a2e]">100%</div>
-                <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
+        {!loading && (
+          <section ref={statsSectionRef} className="py-12 bg-gradient-to-r from-gray-50 to-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div ref={el => statsCardsRef.current[0] = el} className="text-center">
+                  <div className="text-2xl font-bold text-[#1a1a2e]">{properties.length}+</div>
+                  <div className="text-sm text-gray-500 mt-1">Premium Properties</div>
+                </div>
+                <div ref={el => statsCardsRef.current[1] = el} className="text-center">
+                  <div className="text-2xl font-bold text-[#1a1a2e]">50,000+</div>
+                  <div className="text-sm text-gray-500 mt-1">Happy Clients</div>
+                </div>
+                <div ref={el => statsCardsRef.current[2] = el} className="text-center">
+                  <div className="text-2xl font-bold text-[#1a1a2e]">15+</div>
+                  <div className="text-sm text-gray-500 mt-1">Years Experience</div>
+                </div>
+                <div ref={el => statsCardsRef.current[3] = el} className="text-center">
+                  <div className="text-2xl font-bold text-[#1a1a2e]">100%</div>
+                  <div className="text-sm text-gray-500 mt-1">Verified Properties</div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        <section className="py-16">
+        <section ref={propertiesSectionRef} className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
               <div>
