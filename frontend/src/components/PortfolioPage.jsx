@@ -17,12 +17,9 @@ gsap.registerPlugin(ScrollTrigger);
 const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const [portfolio, setPortfolio] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
-  const [activeSection, setActiveSection] = useState(0);
-  const [currentSlide, setCurrentSlide] = useState(0);
   
   // Refs for GSAP animations
   const mainContainerRef = useRef(null);
@@ -30,11 +27,9 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   const heroRef = useRef(null);
   const statsRef = useRef(null);
   const bioRef = useRef(null);
-  const galleryRef = useRef(null);
   const achievementsRef = useRef(null);
   const socialRef = useRef(null);
   const statItemsRef = useRef([]);
-  const galleryItemsRef = useRef([]);
   const serviceCardsRef = useRef([]);
   const testimonialCardsRef = useRef([]);
   const floatingElementsRef = useRef([]);
@@ -57,7 +52,11 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
     }
   });
   
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState([
+    'https://randomuser.me/api/portraits/men/1.jpg',
+    'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop'
+  ]);
 
   // Additional content for portfolio
   const services = [
@@ -84,218 +83,13 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
   ];
 
   useEffect(() => {
-    loadPortfolio();
+    // Load portfolio data in background without showing loading state
+    loadPortfolioInBackground();
     createFloatingElements();
+    setupGSAPAnimations();
   }, []);
 
-  const createFloatingElements = () => {
-    const container = document.getElementById('portfolio-container');
-    if (container) {
-      for (let i = 0; i < 50; i++) {
-        const element = document.createElement('div');
-        element.className = 'floating-particle';
-        element.style.position = 'absolute';
-        element.style.width = Math.random() * 4 + 2 + 'px';
-        element.style.height = element.style.width;
-        element.style.background = `rgba(212, 175, 55, ${Math.random() * 0.3})`;
-        element.style.borderRadius = '50%';
-        element.style.left = Math.random() * 100 + '%';
-        element.style.top = Math.random() * 100 + '%';
-        element.style.pointerEvents = 'none';
-        container.appendChild(element);
-        floatingElementsRef.current.push(element);
-      }
-    }
-  };
-
-  // GSAP Animations
-  useEffect(() => {
-    if (!loading && portfolio) {
-      // Create ScrollTrigger for each section - Slide effect
-      sectionsRef.current.forEach((section, index) => {
-        if (section) {
-          gsap.fromTo(section,
-            { opacity: 0, y: 100, rotationX: -15, scale: 0.95 },
-            {
-              opacity: 1,
-              y: 0,
-              rotationX: 0,
-              scale: 1,
-              duration: 1.2,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: section,
-                start: "top 85%",
-                end: "top 15%",
-                toggleActions: "play reverse play reverse",
-                scrub: 0.5,
-              }
-            }
-          );
-        }
-      });
-
-      // Hero section with parallax
-      gsap.fromTo(heroRef.current,
-        { opacity: 0, scale: 0.8, y: 100, rotationY: 30 },
-        {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotationY: 0,
-          duration: 1.5,
-          ease: "back.out(1.5)",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top 90%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Stats with elastic animation
-      gsap.fromTo(statItemsRef.current,
-        { opacity: 0, scale: 0, rotation: -180 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "elastic.out(1, 0.3)",
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Service cards with 3D flip effect
-      gsap.fromTo(serviceCardsRef.current,
-        { opacity: 0, rotationY: 90, scale: 0.5 },
-        {
-          opacity: 1,
-          rotationY: 0,
-          scale: 1,
-          duration: 0.7,
-          stagger: 0.1,
-          ease: "back.out(1.2)",
-          scrollTrigger: {
-            trigger: document.querySelector('.services-section'),
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Testimonials with slide effect
-      gsap.fromTo(testimonialCardsRef.current,
-        { opacity: 0, x: (i) => i % 2 === 0 ? -100 : 100, scale: 0.8 },
-        {
-          opacity: 1,
-          x: 0,
-          scale: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: document.querySelector('.testimonials-section'),
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Gallery items with zoom effect
-      gsap.fromTo(galleryItemsRef.current,
-        { opacity: 0, scale: 0.5, filter: "blur(10px)" },
-        {
-          opacity: 1,
-          scale: 1,
-          filter: "blur(0px)",
-          duration: 0.8,
-          stagger: 0.08,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: galleryRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Achievements with bounce
-      gsap.fromTo(achievementsRef.current,
-        { opacity: 0, y: 80, skewY: 5 },
-        {
-          opacity: 1,
-          y: 0,
-          skewY: 0,
-          duration: 1,
-          ease: "bounce.out",
-          scrollTrigger: {
-            trigger: achievementsRef.current,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
-
-      // Social links with wave effect
-      if (socialRef.current && socialRef.current.children) {
-        gsap.fromTo(socialRef.current.children,
-          { opacity: 0, scale: 0, rotate: 180 },
-          {
-            opacity: 1,
-            scale: 1,
-            rotate: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "back.out(1.5)",
-            scrollTrigger: {
-              trigger: socialRef.current,
-              start: "top 90%",
-              toggleActions: "play none none reverse"
-            }
-          }
-        );
-      }
-
-      // Continuous animations
-      gsap.to(".profile-image", {
-        y: -12,
-        duration: 2.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-
-      gsap.to(".pulse-glow", {
-        boxShadow: "0 0 20px rgba(212, 175, 55, 0.6), 0 0 40px rgba(212, 175, 55, 0.3)",
-        duration: 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-
-      // Floating particles animation
-      floatingElementsRef.current.forEach((el, i) => {
-        gsap.to(el, {
-          y: -Math.random() * 100 - 50,
-          x: Math.sin(i) * 50,
-          opacity: 0,
-          duration: Math.random() * 5 + 3,
-          repeat: -1,
-          yoyo: true,
-          ease: "power1.inOut",
-          delay: Math.random() * 2
-        });
-      });
-    }
-  }, [loading, portfolio]);
-
-  const loadPortfolio = async () => {
+  const loadPortfolioInBackground = async () => {
     try {
       const response = await portfolioAPI.getPortfolio();
       if (response.data) {
@@ -312,18 +106,143 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           location: response.data.location || formData.location,
           socialLinks: response.data.socialLinks || formData.socialLinks
         });
-        setPhotos(response.data.photos || []);
+        if (response.data.photos && response.data.photos.length > 0) {
+          setPhotos(response.data.photos);
+        }
       }
     } catch (error) {
       console.error('Error loading portfolio:', error);
-      setPhotos([
-        'https://randomuser.me/api/portraits/men/1.jpg',
-        'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
-        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop'
-      ]);
-    } finally {
-      setLoading(false);
     }
+  };
+
+  const createFloatingElements = () => {
+    const container = document.getElementById('portfolio-container');
+    if (container) {
+      for (let i = 0; i < 30; i++) {
+        const element = document.createElement('div');
+        element.className = 'floating-particle';
+        element.style.position = 'absolute';
+        element.style.width = Math.random() * 3 + 1 + 'px';
+        element.style.height = element.style.width;
+        element.style.background = `rgba(212, 175, 55, ${Math.random() * 0.2})`;
+        element.style.borderRadius = '50%';
+        element.style.left = Math.random() * 100 + '%';
+        element.style.top = Math.random() * 100 + '%';
+        element.style.pointerEvents = 'none';
+        container.appendChild(element);
+        floatingElementsRef.current.push(element);
+      }
+    }
+  };
+
+  const setupGSAPAnimations = () => {
+    setTimeout(() => {
+      // Hero section animation
+      if (heroRef.current) {
+        gsap.fromTo(heroRef.current,
+          { opacity: 0, scale: 0.95, y: 50 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out"
+          }
+        );
+      }
+
+      // Stats animation
+      if (statItemsRef.current.length) {
+        gsap.fromTo(statItemsRef.current,
+          { opacity: 0, scale: 0.8 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "back.out(0.8)"
+          }
+        );
+      }
+
+      // Service cards animation
+      if (serviceCardsRef.current.length) {
+        gsap.fromTo(serviceCardsRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            stagger: 0.08,
+            ease: "power2.out"
+          }
+        );
+      }
+
+      // Testimonials animation
+      if (testimonialCardsRef.current.length) {
+        gsap.fromTo(testimonialCardsRef.current,
+          { opacity: 0, x: 30 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "power2.out"
+          }
+        );
+      }
+
+      // Achievements animation
+      if (achievementsRef.current) {
+        gsap.fromTo(achievementsRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out"
+          }
+        );
+      }
+
+      // Social links animation
+      if (socialRef.current && socialRef.current.children) {
+        gsap.fromTo(socialRef.current.children,
+          { opacity: 0, scale: 0 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.4,
+            stagger: 0.08,
+            ease: "back.out(1)"
+          }
+        );
+      }
+
+      // Continuous animations
+      gsap.to(".profile-image", {
+        y: -8,
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut"
+      });
+
+      // Floating particles animation
+      floatingElementsRef.current.forEach((el, i) => {
+        gsap.to(el, {
+          y: -Math.random() * 60 - 30,
+          x: Math.sin(i) * 30,
+          opacity: 0,
+          duration: Math.random() * 4 + 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "power1.inOut",
+          delay: Math.random() * 2
+        });
+      });
+    }, 100);
   };
 
   const handlePhotoUpload = async (e) => {
@@ -386,27 +305,6 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
       setUploading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 border-[#d4af37] border-t-transparent"></div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-[#d4af37] animate-pulse" />
-            </div>
-          </div>
-          <p className="mt-6 text-gray-300 font-medium text-lg">Loading Portfolio...</p>
-          <div className="mt-2 flex gap-1 justify-center">
-            <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-            <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-2 h-2 bg-[#d4af37] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div id="portfolio-container" ref={mainContainerRef} className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
@@ -475,156 +373,152 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        {/* Hero Section - Slide 1 */}
-        <div ref={el => sectionsRef.current[0] = el}>
-          <div ref={heroRef} className="relative mb-16">
-            <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/20 shadow-2xl transform transition-all duration-500 hover:shadow-[#d4af37]/20">
-              <div className="relative h-64 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80')] bg-cover bg-center opacity-30"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
-                <div className="absolute -bottom-20 left-8">
-                  <div className="relative group">
-                    <div className="profile-image w-36 h-36 rounded-full border-4 border-[#d4af37] bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-105">
-                      {photos[0] ? (
-                        <img src={photos[0]} alt="Profile" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-                          <User className="w-14 h-14 text-[#d4af37]" />
-                        </div>
-                      )}
-                    </div>
-                    {isOwner && isEditing && (
-                      <label className="absolute bottom-0 right-0 bg-gradient-to-r from-[#d4af37] to-amber-500 text-gray-900 p-2.5 rounded-full cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg">
-                        <Camera className="w-4 h-4" />
-                        <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-                      </label>
+        {/* Hero Section */}
+        <div ref={heroRef} className="relative mb-16">
+          <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/20 shadow-2xl transform transition-all duration-500 hover:shadow-[#d4af37]/20">
+            <div className="relative h-64 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80')] bg-cover bg-center opacity-30"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
+              <div className="absolute -bottom-20 left-8">
+                <div className="relative group">
+                  <div className="profile-image w-36 h-36 rounded-full border-4 border-[#d4af37] bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-105">
+                    {photos[0] ? (
+                      <img src={photos[0]} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                        <User className="w-14 h-14 text-[#d4af37]" />
+                      </div>
                     )}
                   </div>
+                  {isOwner && isEditing && (
+                    <label className="absolute bottom-0 right-0 bg-gradient-to-r from-[#d4af37] to-amber-500 text-gray-900 p-2.5 rounded-full cursor-pointer hover:scale-110 transition-all duration-300 shadow-lg">
+                      <Camera className="w-4 h-4" />
+                      <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
+                    </label>
+                  )}
                 </div>
-                <div className="absolute top-6 right-6">
-                  <div className="pulse-glow">
-                    <Crown className="w-10 h-10 text-[#d4af37] animate-pulse" />
-                  </div>
+              </div>
+              <div className="absolute top-6 right-6">
+                <div className="pulse-glow">
+                  <Crown className="w-10 h-10 text-[#d4af37] animate-pulse" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="pt-24 pb-10 px-8">
+              <div className="flex justify-between items-start flex-wrap gap-6">
+                <div>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="text-3xl font-bold text-white mb-2 border-2 border-[#d4af37] rounded-lg px-4 py-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    />
+                  ) : (
+                    <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent animate-gradient">
+                      {formData.name}
+                    </h1>
+                  )}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="text-gray-300 border-2 border-white/20 rounded-lg px-4 py-2 mt-2 bg-transparent focus:outline-none focus:border-[#d4af37] w-full"
+                      value={formData.title}
+                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    />
+                  ) : (
+                    <p className="text-gray-300 mt-2 flex items-center gap-2 text-lg">
+                      <Sparkles className="w-5 h-5 text-[#d4af37] animate-pulse" />
+                      {formData.title}
+                    </p>
+                  )}
+                </div>
+                <div ref={statsRef} className="flex gap-4">
+                  {['experience', 'propertiesSold', 'rating'].map((key, idx) => (
+                    <div 
+                      key={idx}
+                      ref={el => statItemsRef.current[idx] = el}
+                      className="text-center bg-gradient-to-br from-white/10 to-white/5 px-6 py-3 rounded-2xl backdrop-blur-sm border border-white/10 hover:border-[#d4af37]/50 transition-all duration-300 hover:scale-105"
+                    >
+                      <div className="text-2xl font-bold text-[#d4af37]">
+                        {key === 'rating' ? `⭐ ${formData[key]}` : formData[key]}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        {key === 'experience' ? 'Experience' : key === 'propertiesSold' ? 'Properties Sold' : 'Rating'}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               
-              <div className="pt-24 pb-10 px-8">
-                <div className="flex justify-between items-start flex-wrap gap-6">
-                  <div>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="text-3xl font-bold text-white mb-2 border-2 border-[#d4af37] rounded-lg px-4 py-2 bg-transparent focus:outline-none focus:ring-2 focus:ring-[#d4af37]"
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      />
-                    ) : (
-                      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-[#d4af37] to-white bg-clip-text text-transparent animate-gradient">
-                        {formData.name}
-                      </h1>
-                    )}
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="text-gray-300 border-2 border-white/20 rounded-lg px-4 py-2 mt-2 bg-transparent focus:outline-none focus:border-[#d4af37] w-full"
-                        value={formData.title}
-                        onChange={(e) => setFormData({...formData, title: e.target.value})}
-                      />
-                    ) : (
-                      <p className="text-gray-300 mt-2 flex items-center gap-2 text-lg">
-                        <Sparkles className="w-5 h-5 text-[#d4af37] animate-pulse" />
-                        {formData.title}
-                      </p>
-                    )}
-                  </div>
-                  <div ref={statsRef} className="flex gap-4">
-                    {['experience', 'propertiesSold', 'rating'].map((key, idx) => (
-                      <div 
-                        key={idx}
-                        ref={el => statItemsRef.current[idx] = el}
-                        className="text-center bg-gradient-to-br from-white/10 to-white/5 px-6 py-3 rounded-2xl backdrop-blur-sm border border-white/10 hover:border-[#d4af37]/50 transition-all duration-300 hover:scale-105"
-                      >
-                        <div className="text-2xl font-bold text-[#d4af37]">
-                          {key === 'rating' ? `⭐ ${formData[key]}` : formData[key]}
-                        </div>
-                        <div className="text-xs text-gray-400 mt-1">
-                          {key === 'experience' ? 'Experience' : key === 'propertiesSold' ? 'Properties Sold' : 'Rating'}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+              <div className="mt-8 flex flex-wrap gap-3 text-sm">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
+                  <Mail className="w-4 h-4 text-[#d4af37]" />
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
+                  ) : (
+                    <span className="text-gray-300">{formData.email}</span>
+                  )}
                 </div>
-                
-                <div className="mt-8 flex flex-wrap gap-3 text-sm">
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
-                    <Mail className="w-4 h-4 text-[#d4af37]" />
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      />
-                    ) : (
-                      <span className="text-gray-300">{formData.email}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
-                    <Phone className="w-4 h-4 text-[#d4af37]" />
-                    {isEditing ? (
-                      <input
-                        type="tel"
-                        className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      />
-                    ) : (
-                      <span className="text-gray-300">{formData.phone}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
-                    <MapPin className="w-4 h-4 text-[#d4af37]" />
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
-                        value={formData.location}
-                        onChange={(e) => setFormData({...formData, location: e.target.value})}
-                      />
-                    ) : (
-                      <span className="text-gray-300">{formData.location}</span>
-                    )}
-                  </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
+                  <Phone className="w-4 h-4 text-[#d4af37]" />
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    />
+                  ) : (
+                    <span className="text-gray-300">{formData.phone}</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10">
+                  <MapPin className="w-4 h-4 text-[#d4af37]" />
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="bg-transparent border border-white/20 rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37] text-white"
+                      value={formData.location}
+                      onChange={(e) => setFormData({...formData, location: e.target.value})}
+                    />
+                  ) : (
+                    <span className="text-gray-300">{formData.location}</span>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bio Section - Slide 2 */}
-        <div ref={el => sectionsRef.current[1] = el}>
-          <div ref={bioRef} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-10 mb-12 border border-white/20 transform transition-all duration-500 hover:shadow-2xl">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center">
-                <Briefcase className="w-5 h-5 text-gray-900" />
-              </div>
-              About Me
-              <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
-            </h2>
-            {isEditing ? (
-              <textarea
-                className="w-full border-2 border-white/20 rounded-xl p-5 h-36 resize-none focus:outline-none focus:border-[#d4af37] transition-all duration-300 bg-white/5 text-white"
-                value={formData.bio}
-                onChange={(e) => setFormData({...formData, bio: e.target.value})}
-              />
-            ) : (
-              <p className="text-gray-300 leading-relaxed text-lg">{formData.bio}</p>
-            )}
-          </div>
+        {/* Bio Section */}
+        <div ref={bioRef} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-10 mb-12 border border-white/20 transform transition-all duration-500 hover:shadow-2xl">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center">
+              <Briefcase className="w-5 h-5 text-gray-900" />
+            </div>
+            About Me
+            <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
+          </h2>
+          {isEditing ? (
+            <textarea
+              className="w-full border-2 border-white/20 rounded-xl p-5 h-36 resize-none focus:outline-none focus:border-[#d4af37] transition-all duration-300 bg-white/5 text-white"
+              value={formData.bio}
+              onChange={(e) => setFormData({...formData, bio: e.target.value})}
+            />
+          ) : (
+            <p className="text-gray-300 leading-relaxed text-lg">{formData.bio}</p>
+          )}
         </div>
 
-        {/* Services Section - Slide 3 */}
-        <div ref={el => sectionsRef.current[2] = el} className="services-section mb-16">
+        {/* Services Section */}
+        <div className="services-section mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-white mb-3">What I Offer</h2>
             <p className="text-gray-400">Comprehensive real estate services tailored to your needs</p>
@@ -650,79 +544,8 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           </div>
         </div>
 
-        {/* Photo Gallery Section - Slide 4 */}
-        <div ref={el => sectionsRef.current[3] = el}>
-          <div ref={galleryRef} className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-8 mb-12 border border-white/20">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center">
-                  <Camera className="w-5 h-5 text-gray-900" />
-                </div>
-                Photo Gallery
-                <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
-              </h2>
-              {isOwner && isEditing && (
-                <label className="flex items-center gap-2 bg-gradient-to-r from-[#d4af37] to-amber-500 text-gray-900 px-5 py-2.5 rounded-xl font-semibold hover:shadow-lg transition-all cursor-pointer transform hover:-translate-y-0.5">
-                  <Upload className="w-4 h-4" />
-                  Add Photos
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={handlePhotoUpload} />
-                </label>
-              )}
-            </div>
-            
-            {uploading && (
-              <div className="text-center py-8">
-                <div className="inline-block animate-spin rounded-full h-10 w-10 border-3 border-[#d4af37] border-t-transparent"></div>
-                <p className="text-sm text-gray-400 mt-3">Uploading photos...</p>
-              </div>
-            )}
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {photos.map((photo, index) => (
-                <div 
-                  key={index} 
-                  ref={el => galleryItemsRef.current[index] = el}
-                  className="relative group overflow-hidden rounded-xl shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer"
-                >
-                  <img 
-                    src={photo} 
-                    alt={`Gallery ${index + 1}`}
-                    className="w-full h-56 object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                  {isOwner && isEditing && (
-                    <button
-                      onClick={() => handleRemovePhoto(index)}
-                      className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 shadow-lg"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                  <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                    <span className="text-white text-xs bg-black/60 px-2 py-1 rounded-lg backdrop-blur-sm">Photo {index + 1}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {photos.length === 0 && (
-              <div className="text-center py-16">
-                <ImageIcon className="w-20 h-20 text-gray-600 mx-auto mb-4 animate-pulse" />
-                <p className="text-gray-400">No photos added yet</p>
-                {isOwner && isEditing && (
-                  <label className="inline-flex items-center gap-2 mt-6 bg-gradient-to-r from-[#d4af37] to-amber-500 text-gray-900 px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all cursor-pointer">
-                    <Upload className="w-4 h-4" />
-                    Upload Your First Photo
-                    <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-                  </label>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Testimonials Section - Slide 5 */}
-        <div ref={el => sectionsRef.current[4] = el} className="testimonials-section mb-16">
+        {/* Testimonials Section */}
+        <div className="testimonials-section mb-16">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-white mb-3">Client Testimonials</h2>
             <p className="text-gray-400">What my clients say about working with me</p>
@@ -757,45 +580,41 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
           </div>
         </div>
 
-        {/* Achievements Section - Slide 6 */}
-        <div ref={el => sectionsRef.current[5] = el}>
-          <div ref={achievementsRef} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-10 mb-12 border border-[#d4af37]/30 shadow-2xl transform transition-all duration-500 hover:shadow-[#d4af37]/20">
-            <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center">
-                <Award className="w-5 h-5 text-gray-900" />
-              </div>
-              Achievements & Recognition
-              <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {achievementsList.map((achievement, index) => (
-                <div key={index} className={`bg-gradient-to-br ${achievement.color} bg-opacity-10 rounded-xl p-5 text-center backdrop-blur-sm border border-white/10 hover:scale-105 transition-all duration-300 cursor-pointer`}>
-                  <achievement.icon className="w-10 h-10 text-[#d4af37] mx-auto mb-3" />
-                  <div className="text-lg font-bold text-white">{achievement.title}</div>
-                  <div className="text-2xl font-bold text-[#d4af37] mt-1">{achievement.year}</div>
-                  <div className="text-xs text-gray-400 mt-2">{achievement.desc}</div>
-                </div>
-              ))}
+        {/* Achievements Section */}
+        <div ref={achievementsRef} className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-10 mb-12 border border-[#d4af37]/30 shadow-2xl transform transition-all duration-500 hover:shadow-[#d4af37]/20">
+          <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#d4af37] to-amber-500 rounded-xl flex items-center justify-center">
+              <Award className="w-5 h-5 text-gray-900" />
             </div>
+            Achievements & Recognition
+            <div className="flex-1 h-px bg-gradient-to-r from-[#d4af37] to-transparent ml-4"></div>
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {achievementsList.map((achievement, index) => (
+              <div key={index} className={`bg-gradient-to-br ${achievement.color} bg-opacity-10 rounded-xl p-5 text-center backdrop-blur-sm border border-white/10 hover:scale-105 transition-all duration-300 cursor-pointer`}>
+                <achievement.icon className="w-10 h-10 text-[#d4af37] mx-auto mb-3" />
+                <div className="text-lg font-bold text-white">{achievement.title}</div>
+                <div className="text-2xl font-bold text-[#d4af37] mt-1">{achievement.year}</div>
+                <div className="text-xs text-gray-400 mt-2">{achievement.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Social Links - Slide 7 */}
-        <div ref={el => sectionsRef.current[6] = el}>
-          <div ref={socialRef} className="flex justify-center gap-6 mt-8 pb-12">
-            <a href={formData.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-12 border border-white/20">
-              <Instagram className="w-5 h-5 text-white" />
-            </a>
-            <a href={formData.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-125 hover:-rotate-12 border border-white/20">
-              <Facebook className="w-5 h-5 text-white" />
-            </a>
-            <a href={formData.socialLinks?.twitter} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-6 border border-white/20">
-              <Twitter className="w-5 h-5 text-white" />
-            </a>
-            <a href={formData.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all duration-300 transform hover:scale-125 hover:-rotate-6 border border-white/20">
-              <Linkedin className="w-5 h-5 text-white" />
-            </a>
-          </div>
+        {/* Social Links */}
+        <div ref={socialRef} className="flex justify-center gap-6 mt-8 pb-12">
+          <a href={formData.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-12 border border-white/20">
+            <Instagram className="w-5 h-5 text-white" />
+          </a>
+          <a href={formData.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-125 hover:-rotate-12 border border-white/20">
+            <Facebook className="w-5 h-5 text-white" />
+          </a>
+          <a href={formData.socialLinks?.twitter} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-6 border border-white/20">
+            <Twitter className="w-5 h-5 text-white" />
+          </a>
+          <a href={formData.socialLinks?.linkedin} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-blue-700 hover:text-white transition-all duration-300 transform hover:scale-125 hover:-rotate-6 border border-white/20">
+            <Linkedin className="w-5 h-5 text-white" />
+          </a>
         </div>
       </div>
 
@@ -811,11 +630,11 @@ const PortfolioPage = ({ isOwner, userRole, setCurrentPage }) => {
         .floating-particle {
           position: absolute;
           pointer-events: none;
-          animation: float 8s infinite;
+          animation: floatParticle 8s infinite;
         }
-        @keyframes float {
+        @keyframes floatParticle {
           0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-          50% { opacity: 0.5; }
+          50% { opacity: 0.3; }
         }
       `}</style>
     </div>
