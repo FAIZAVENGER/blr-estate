@@ -77,7 +77,7 @@ const A1BuildersRealEstate = () => {
   // Refs for Home Page GSAP Animations
   const heroTitleRef = useRef(null);
   const heroSubtitleRef = useRef(null);
-  const heroSearchRef = useRef(null);
+  const heroButtonRef = useRef(null);
   const statsSectionRef = useRef(null);
   const statsCardsRef = useRef([]);
   const propertiesSectionRef = useRef(null);
@@ -241,17 +241,9 @@ const A1BuildersRealEstate = () => {
     if (bedrooms !== 'all') {
       filtered = filtered.filter(p => p.bedrooms === parseInt(bedrooms));
     }
-    
-    // Apply search filter
-    if (searchTerm) {
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.location.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
 
     setFilteredProperties(filtered);
-  }, [priceRange, propertyType, bedrooms, properties, activeTab, searchTerm]);
+  }, [priceRange, propertyType, bedrooms, properties, activeTab]);
 
   const toggleFavorite = (id) => {
     setFavorites(prev => 
@@ -313,7 +305,6 @@ const A1BuildersRealEstate = () => {
     setPriceRange('all');
     setPropertyType('all');
     setBedrooms('all');
-    setSearchTerm('');
   };
 
   const handleDeleteProperty = async (propertyId, propertyTitle) => {
@@ -2001,8 +1992,8 @@ const A1BuildersRealEstate = () => {
           );
         }
         
-        if (heroSearchRef.current) {
-          tl.fromTo(heroSearchRef.current,
+        if (heroButtonRef.current) {
+          tl.fromTo(heroButtonRef.current,
             { opacity: 0, scale: 0.8, y: 30 },
             {
               opacity: 1,
@@ -2236,30 +2227,20 @@ const A1BuildersRealEstate = () => {
                 Discover premium properties in the Silicon Valley of India with A1 Builders
               </p>
 
-              {/* Search Bar */}
-              <div ref={heroSearchRef} className="bg-white rounded-xl shadow-xl mb-6">
+              {/* Filter Button Only - No Search Bar */}
+              <div ref={heroButtonRef} className="bg-white rounded-xl shadow-xl mb-6 inline-block">
                 <div className="flex flex-col md:flex-row">
-                  <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder="Search by location or property name..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 rounded-t-xl md:rounded-l-xl md:rounded-tr-none border-none focus:ring-2 focus:ring-[#d4af37] outline-none"
-                    />
-                  </div>
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="md:w-auto bg-gray-100 text-gray-700 px-6 py-4 flex items-center justify-center gap-2 hover:bg-gray-200 transition-all"
+                    className="bg-gray-100 text-gray-700 px-8 py-4 flex items-center justify-center gap-2 hover:bg-gray-200 transition-all rounded-xl"
                   >
                     <Filter className="w-5 h-5" />
                     {showFilters ? 'Hide Filters' : 'Show Filters'}
                   </button>
-                  {(priceRange !== 'all' || propertyType !== 'all' || bedrooms !== 'all' || searchTerm) && (
+                  {(priceRange !== 'all' || propertyType !== 'all' || bedrooms !== 'all') && (
                     <button
                       onClick={clearFilters}
-                      className="md:w-auto bg-red-500 text-white px-6 py-4 flex items-center justify-center gap-2 hover:bg-red-600 transition-all rounded-b-xl md:rounded-r-xl"
+                      className="bg-red-500 text-white px-6 py-4 flex items-center justify-center gap-2 hover:bg-red-600 transition-all rounded-xl ml-2"
                     >
                       <X className="w-5 h-5" />
                       Clear Filters
